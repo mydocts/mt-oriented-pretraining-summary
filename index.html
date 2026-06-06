@@ -247,6 +247,23 @@
 
           <tr>
             <td>
+              <span class="paper">LLaMAX: Scaling Linguistic Horizons of LLM by Enhancing Translation Capabilities Beyond 100 Languages</span>
+              <span class="note">Lu et al.</span>
+              <span class="tag">massively multilingual CPT</span>
+            </td>
+            <td>2024-07 / 2024-11</td>
+            <td>Findings EMNLP 2024</td>
+            <td>LLaMA-2-7B、LLaMA-3-8B；instruction 对齐版本使用 Alpaca 风格数据。</td>
+            <td>在 LLaMA 系列上做大规模 multilingual continual pretraining，目标是把翻译能力扩展到 FLORES-101 覆盖的 100+ 语言；核心分析包括是否扩展词表、如何做低资源数据增强、以及单语和平行数据如何组织。</td>
+            <td>单语：mC4、MADLAD-400，覆盖 102 语言；平行：Lego-MT 102 语言、4,737 language pairs；低资源增强使用 MUSE、PanLex 字典构造 pseudo-parallel data。</td>
+            <td>论文强调保留原始 LLaMA vocabulary，避免新增 token 破坏原模型分布；低资源语料通过字典覆盖率与 pseudo-parallel 构造增强。具体通用清洗阈值未展开。</td>
+            <td>continual pretraining 使用超过 64B tokens；LLaMAX2 训练约 60 天。平行句对按 source-target 拼接成单条训练序列。</td>
+            <td>FLORES-101、FLORES-200；另有 WMT23、TED、TICO，以及 XNLI、MGSM、MMLU 等多语泛化评估。</td>
+            <td>spBLEU、COMET；多语理解/推理任务使用对应 accuracy 等指标。</td>
+          </tr>
+
+          <tr>
+            <td>
               <span class="paper">Enhancing Translation Accuracy of LLMs through Continual Pre-Training on Parallel Data</span>
               <span class="note">Kondo et al.</span>
               <span class="tag">parallel-data CPT</span>
@@ -266,6 +283,29 @@
             </td>
             <td>13 个英日测试集，包括 ASPEC、JESC、KFTT、TED/IWSLT、BSD、WMT Robustness、WMT22 GMT 等。</td>
             <td>sacreBLEU、COMET-22，并做显著性检验。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Quality or Quantity? On Data Scale and Diversity in Adapting LLMs for Low-Resource Translation</span>
+              <span class="note">Iyer et al.</span>
+              <span class="tag">CPT data study</span>
+            </td>
+            <td>2024-08 / 2024-11</td>
+            <td>WMT 2024</td>
+            <td>Gemma-2B、Mistral-7B、LLaMA-3-8B。</td>
+            <td>不是发布新 MT 模型，而是系统研究低资源 LLM-MT 中 parallel data 在 CPT 和 SFT 的作用。比较 all-mono、mono+parallel concat、mono+parallel separate 等 CPT 方案，再统一做 SFT。</td>
+            <td>低资源语言：11 个 Indigenous American 语言与 4 个 North-East Indian 语言；平行数据来自 OPUS、AmericasNLP、WMT 2023 Indic track 等；单语数据来自各低资源语言可得语料。</td>
+            <td>附录汇总各数据源清洗；CPT/SFT 数据按语言方向组织，并用 concat 或 separate 方式控制 parallel exposure。论文重点是规模和配比实验，不是提出新清洗器。</td>
+            <td>
+              <ul>
+                <li>CPT 规模覆盖 1M-13M parallel sentences，约 50M-750M tokens。</li>
+                <li>主要 mono+parallel 实验中，平行与单语按 1:1 混合。</li>
+                <li>SFT 扩展到 500K 乃至 1M spa-X MT instructions。</li>
+              </ul>
+            </td>
+            <td>AmericasNLP 2024、WMT 2023 Indic track；重点评估西语/英语到低资源语言方向。</td>
+            <td>chrF++，使用 SacreBLEU 计算；报告 bootstrap confidence estimates。</td>
           </tr>
 
           <tr>
@@ -334,6 +374,29 @@
 
           <tr>
             <td>
+              <span class="paper">Massively Multilingual Adaptation of LLMs Using Bilingual Translation Data / EMMA-500 Gen 2</span>
+              <span class="note">Ji et al.</span>
+              <span class="tag">bilingual-data CPT</span>
+            </td>
+            <td>2025-06</td>
+            <td>arXiv / Technical Report</td>
+            <td>LLaMA-3-8B、LLaMA-3.1-8B；发布 EMMA-500 Llama 3/3.1 Mono/Bi 四个模型。</td>
+            <td>研究 massively multilingual continual pretraining 中加入 bilingual translation data 的影响；构造 monolingual mix 与 bilingual mix 对照，使用 causal LM objective 继续训练 LLaMA 3 系列。</td>
+            <td>MaLA bilingual translation corpus：OPUS、NLLB、Tatoeba 等来源，覆盖 500+ 语言、2,507 language pairs；同时混合 cleaned/deduplicated MaLA 单语语料、事实/百科/代码/指令等多类型数据。</td>
+            <td>语言/脚本识别、语言代码规范化、dataset-specific cleaning、去重；处理 Tatoeba 等语料中的重复/噪声句对；按资源等级做统计和采样。</td>
+            <td>
+              <ul>
+                <li>MaLA translation corpus 清洗后超过 426B tokens。</li>
+                <li>Mono mix：25K steps，约 419B LLaMA-3 tokens。</li>
+                <li>Bi mix：40K steps，最多 671B tokens。</li>
+              </ul>
+            </td>
+            <td>7 类任务、12 个 benchmarks；低资源重点包括 FLORES-200、SIB-200、Taxi1500 等。</td>
+            <td>MT 使用 FLORES-200 对应翻译指标；其他任务报告分类、推理、阅读理解等 benchmark 分数。当前抽取文本中未见统一单一 MT 指标名称。</td>
+          </tr>
+
+          <tr>
+            <td>
               <span class="paper">Patent Claim Translation via Continual Pre-training of LLMs with Parallel Data</span>
               <span class="note">Matsumoto et al.</span>
               <span class="tag">domain CPT</span>
@@ -347,6 +410,29 @@
             <td>CPT 约 61M 句对；每 0.1 epoch / 6.1M 句对存 checkpoint；约 30.5M 句对时已获得大部分收益。</td>
             <td>2021 JaParaPat patent-claim test set；另有 100 样本 GPT-4o reference 与人工质性分析。</td>
             <td>sacreBLEU、COMET-22；句级 BLEU/COMET；显著性检验。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Seed-X: Building Strong Multilingual Translation LLM with 7B Parameters</span>
+              <span class="note">Cheng et al.</span>
+              <span class="tag">from-scratch MT pretraining</span>
+            </td>
+            <td>2025-07</td>
+            <td>arXiv / Technical Report</td>
+            <td>从头预训练的 7B Seed-X base；后续发布 instruct model、RL model 和 reward model。</td>
+            <td>三阶段预训练：S1 general stage 使用主流语言大规模单语数据；S2 multilingual-dominant stage 提高多语单语和双语数据比例；S3 parallel-only stage 用多轮重写/过滤后的高质量双语数据继续训练。之后做 translation SFT 与 PPO-based RL。</td>
+            <td>单语：28 语言共 6T tokens；双语：先从公开 web data 收集约 200B tokens seed bilingual data，再用临时翻译模型翻译、改写、过滤，迭代生成更高质量 pseudo/parallel data。</td>
+            <td>单语用文档级质量评估模型分 high/medium/low 三档：高质量保留、中质量用 LLM paraphrase、低质量剔除；双语用语言识别置信度、word alignment 指标、多轮 LLM filtering/rewriting 和 poor-quality pair filtering。</td>
+            <td>
+              <ul>
+                <li>单语预训练数据：6T tokens。</li>
+                <li>seed bilingual data：约 200B tokens。</li>
+                <li>SFT：236K translation-only instruction instances。</li>
+              </ul>
+            </td>
+            <td>FLORES-200 756 directions、WMT-25 English-to-X 25 target languages、Seed-X-Challenge；另有内部 ZH↔EN 测试。</td>
+            <td>XCOMET-XL、BLEURT；表格中也报告 COMET/BLEURT，RL 阶段避免直接用 BLEU/BLEURT/COMET 作 reward。</td>
           </tr>
 
           <tr>
@@ -404,6 +490,29 @@
             <td>CPT 总量与单/双语配比未在当前片段中给出；distillation 数据约 1M 单语 samples。</td>
             <td>FLORES-200、WMT25、Mandarin⇔Minority Testset。</td>
             <td>XCOMET-XXL、CometKiwi。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Omnilingual MT: Machine Translation for 1,600 Languages</span>
+              <span class="note">Omnilingual MT Team</span>
+              <span class="tag">omnilingual CPT</span>
+            </td>
+            <td>2026-03</td>
+            <td>arXiv / Technical Report</td>
+            <td>OMT-LLaMA 基于 LLaMA-3.1-8B-Instruct；另构建 1B/3B 版本与 OMT-NLLB 路线。</td>
+            <td>OMT-LLaMA 使用 multilingual continual pretraining + post-training + retrieval-augmented translation；CPT 同时做 monolingual documents 的 language modeling 与 parallel documents 的 translation objective，并扩展 tokenizer 到 256K。</td>
+            <td>单语：CC-2000-Web、CC-2000-Pdf，覆盖 2000+ 可识别语言；平行：Bible、FLoRes+、SMOL、Indic corpora、KreyolMT、LTPP、MeDLEy 等；还用 backtranslation 和 bitext mining 构造 synthetic data。</td>
+            <td>URL 过滤低质量网页；GlotLID 识别语言；单语 backtranslation 前抽取 clean monolingual texts 并去噪；synthetic bitext 用相似度阈值和资源等级做过滤消融；MeDLEy 由专业翻译/人工构建。</td>
+            <td>
+              <ul>
+                <li>具体 CPT 总 token 未在当前片段中汇总给出。</li>
+                <li>CPT batch 按 Table 4.1 权重从多数据源 token streams 采样。</li>
+                <li>训练配置：最长 50K steps；sequence length 8192；tokenizer warmup 10K steps。</li>
+              </ul>
+            </td>
+            <td>FLoRes+、BOUQuET、Met-BOUQuET、Bible 1,560+ language varieties、FLoRes-Hard；覆盖 English-to-1,600 与多资源层级评估。</td>
+            <td>ChrF++、MetricX、xCOMET、BLASER 3；post-training 表中使用 xCOMET，RL reward 最终 50/50 组合 ChrF++ 与 MetricX。</td>
           </tr>
 
           <tr>
