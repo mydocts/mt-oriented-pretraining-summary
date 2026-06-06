@@ -225,28 +225,6 @@
 
           <tr>
             <td>
-              <span class="paper">Continued Pre-training on Sentence Analogies for Translation with Small Data</span>
-              <span class="note">Khalifa et al.</span>
-              <span class="tag">low-resource CPT</span>
-            </td>
-            <td>2024-05</td>
-            <td>LREC-COLING 2024</td>
-            <td>mBART-large-50。</td>
-            <td>提出 CPoA：从源语和目标语两侧检索句子类比，用 “A:B::C:[mask]” 的 analogy objective 做 continued pretraining，再在平行数据上 fine-tune MT。</td>
-            <td>WMT20 German-Upper Sorbian 低资源任务数据；训练集 60K 平行句，另有 10K 小数据设置。</td>
-            <td>按 analogical coverage 阈值筛选类比；德语侧用 Berkeley Neural Parser 辅助模式抽取；Upper Sorbian 侧用 Anymalign / Cutnalign 做子句对齐；CPT 类比数据 90/10 切分。</td>
-            <td>
-              <ul>
-                <li>60K 设置：普通 CP 用两侧各 60K 单语句；CPoA 在高阈值下约 11K close analogies。</li>
-                <li>10K 设置：类比样本可少至几十到数千级。</li>
-              </ul>
-            </td>
-            <td>WMT20 de↔hsb dev/test；另用 2K perfect analogies 测 analogy-solving。</td>
-            <td>BLEU；analogy-solving 用 Levenshtein distance。</td>
-          </tr>
-
-          <tr>
-            <td>
               <span class="paper">LLaMAX: Scaling Linguistic Horizons of LLM by Enhancing Translation Capabilities Beyond 100 Languages</span>
               <span class="note">Lu et al.</span>
               <span class="tag">massively multilingual CPT</span>
@@ -283,29 +261,6 @@
             </td>
             <td>13 个英日测试集，包括 ASPEC、JESC、KFTT、TED/IWSLT、BSD、WMT Robustness、WMT22 GMT 等。</td>
             <td>sacreBLEU、COMET-22，并做显著性检验。</td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="paper">Quality or Quantity? On Data Scale and Diversity in Adapting LLMs for Low-Resource Translation</span>
-              <span class="note">Iyer et al.</span>
-              <span class="tag">CPT data study</span>
-            </td>
-            <td>2024-08 / 2024-11</td>
-            <td>WMT 2024</td>
-            <td>Gemma-2B、Mistral-7B、LLaMA-3-8B。</td>
-            <td>不是发布新 MT 模型，而是系统研究低资源 LLM-MT 中 parallel data 在 CPT 和 SFT 的作用。比较 all-mono、mono+parallel concat、mono+parallel separate 等 CPT 方案，再统一做 SFT。</td>
-            <td>低资源语言：11 个 Indigenous American 语言与 4 个 North-East Indian 语言；平行数据来自 OPUS、AmericasNLP、WMT 2023 Indic track 等；单语数据来自各低资源语言可得语料。</td>
-            <td>附录汇总各数据源清洗；CPT/SFT 数据按语言方向组织，并用 concat 或 separate 方式控制 parallel exposure。论文重点是规模和配比实验，不是提出新清洗器。</td>
-            <td>
-              <ul>
-                <li>CPT 规模覆盖 1M-13M parallel sentences，约 50M-750M tokens。</li>
-                <li>主要 mono+parallel 实验中，平行与单语按 1:1 混合。</li>
-                <li>SFT 扩展到 500K 乃至 1M spa-X MT instructions。</li>
-              </ul>
-            </td>
-            <td>AmericasNLP 2024、WMT 2023 Indic track；重点评估西语/英语到低资源语言方向。</td>
-            <td>chrF++，使用 SacreBLEU 计算；报告 bootstrap confidence estimates。</td>
           </tr>
 
           <tr>
@@ -393,23 +348,6 @@
             </td>
             <td>7 类任务、12 个 benchmarks；低资源重点包括 FLORES-200、SIB-200、Taxi1500 等。</td>
             <td>MT 使用 FLORES-200 对应翻译指标；其他任务报告分类、推理、阅读理解等 benchmark 分数。当前抽取文本中未见统一单一 MT 指标名称。</td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="paper">Patent Claim Translation via Continual Pre-training of LLMs with Parallel Data</span>
-              <span class="note">Matsumoto et al.</span>
-              <span class="tag">domain CPT</span>
-            </td>
-            <td>2025-06</td>
-            <td>MTSummit 2025</td>
-            <td>rinna/llama-3-youko-8b；另与 Transformer Big、公用 JParaCrawl/WMT 训练基线、GPT-4o few-shot 比较。</td>
-            <td>沿用 Kondo et al. 的 parallel-data CPT：在专利平行语料上继续训练，再对专利 claim 翻译做 SFT；输入格式为日语句 + 英语句。</td>
-            <td>JaParaPat 日英专利平行语料，来自 JPO/USPTO 专利申请；CPT 用 2016-2020 子集，SFT/test 用 2021 专利 claims。</td>
-            <td>JaParaPat 通过专利族文档对齐、句切分与 MT-based sentence alignment 构建；SFT/test 用 LaBSE 相似度过滤，SFT 约 0.8-0.95，test 约 0.9-0.95 且长度超过 100 words。</td>
-            <td>CPT 约 61M 句对；每 0.1 epoch / 6.1M 句对存 checkpoint；约 30.5M 句对时已获得大部分收益。</td>
-            <td>2021 JaParaPat patent-claim test set；另有 100 样本 GPT-4o reference 与人工质性分析。</td>
-            <td>sacreBLEU、COMET-22；句级 BLEU/COMET；显著性检验。</td>
           </tr>
 
           <tr>
