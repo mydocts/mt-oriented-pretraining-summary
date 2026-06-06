@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MT-oriented Pretraining 论文时间线汇总</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --line: #d9dee8;
+      --head: #172033;
+      --head2: #eef3ff;
+      --accent: #225c8d;
+      --unknown: #8a94a6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(1800px, calc(100vw - 40px));
+      margin: 28px auto 40px;
+    }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: var(--head);
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .table-shell {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+      max-height: calc(100vh - 150px);
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      min-width: 2200px;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    th,
+    td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      background: var(--panel);
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--head2);
+      color: #1b2a44;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    th:first-child,
+    td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      width: 260px;
+      box-shadow: 1px 0 0 var(--line);
+    }
+
+    th:first-child {
+      z-index: 3;
+    }
+
+    tr:nth-child(even) td {
+      background: #fbfcff;
+    }
+
+    tr:nth-child(even) td:first-child {
+      background: #fbfcff;
+    }
+
+    .paper {
+      font-weight: 700;
+      color: var(--head);
+    }
+
+    .note {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .tag {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 2px 7px;
+      border: 1px solid #b9c9da;
+      border-radius: 999px;
+      color: var(--accent);
+      background: #f3f8fc;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .unknown {
+      color: var(--unknown);
+      font-weight: 600;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    li + li {
+      margin-top: 4px;
+    }
+
+    footer {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>MT-oriented Pretraining 论文时间线汇总</h1>
+      <p class="subtitle">按发布时间排序；信息来自当前 Zotero PDF/元数据与已抽取文本。未在当前材料中确认的信息用 “-” 标记。</p>
+    </header>
+
+    <section class="table-shell" aria-label="MT-oriented pretraining summary table">
+      <table>
+        <thead>
+          <tr>
+            <th>文章</th>
+            <th>发布时间</th>
+            <th>发布顶会</th>
+            <th>训练 baseline 模型</th>
+            <th>CPT / mid-training 方法</th>
+            <th>CPT 数据来源</th>
+            <th>CPT 清洗数据方法</th>
+            <th>CPT 数据量以及配比</th>
+            <th>CPT 评估数据集</th>
+            <th>CPT 评估指标</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <span class="paper">ALMA: A Paradigm Shift in Machine Translation</span>
+              <span class="note">Guo et al.</span>
+              <span class="tag">MT-oriented adaptation</span>
+            </td>
+            <td>2024-02</td>
+            <td>ICLR 2024</td>
+            <td>LLaMA-2-7B / LLaMA-2-13B；另用 MPT-7B 做部分对照。</td>
+            <td>
+              两阶段训练：Stage 1 对非英语与英语单语语料做 CLM 继续训练；Stage 2 用少量高质量平行数据做翻译指令微调。
+              <span class="note">严格说 Stage 1 更像 monolingual full fine-tuning / pre-SFT adaptation，不是典型“继续预训练 + 指令无关语料”的 CPT。</span>
+            </td>
+            <td>单语：OSCAR；平行：WMT 2017-2020 test sets、FLORES-200 dev/test，开发/测试还用 WMT 2021/2022。</td>
+            <td>主要依赖 curated / human-written 的 WMT 与 FLORES 高质量数据；单语采样按语言比例控制，未看到额外复杂清洗细节。</td>
+            <td>
+              <ul>
+                <li>Stage 1：LLaMA-2-7B 最多 20B 单语 tokens；13B 最多 12B tokens；论文显示 1B tokens 已有明显收益。</li>
+                <li>Stage 2：约 58K 平行样本，2 epochs。</li>
+                <li>单语语言采样比例：de/cs/is/zh/ru/en = 20/14/8/19/22/17%。</li>
+              </ul>
+            </td>
+            <td>WMT 2021 is↔en；WMT 2022 cs/de/zh/ru↔en；另评估 XNLI、XStoryCloze、XWinograd 等跨语言能力。</td>
+            <td>sacreBLEU、COMET-22。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Tower: An Open Multilingual LLM for Translation-Related Tasks</span>
+              <span class="note">Alves et al.</span>
+              <span class="tag">general MT CPT</span>
+            </td>
+            <td>2024-02</td>
+            <td>COLM 2024</td>
+            <td>LLaMA-2-7B / LLaMA-2-13B。</td>
+            <td>在 LLaMA-2 上做 translation-oriented continued pretraining 得到 TowerBase，再做指令微调得到 TowerInstruct；CPT 使用 next-token prediction，混合单语与平行数据。</td>
+            <td>单语：mC4，覆盖 en/de/fr/nl/it/es/pt/ko/ru/zh；平行：OPUS100、WikiMatrix、News-Commentary、TildeModel、Bible 等公开平行语料。</td>
+            <td>单语采用 CCNet / LLaMA 风格清洗；平行数据用 Bicleaner 与 COMETKiwi-22 质量过滤。</td>
+            <td>20B tokens；约 2/3 单语 + 1/3 平行。</td>
+            <td>FLORES-200、WMT23、TICO-19；并评估 APE 与其他 translation-related tasks。</td>
+            <td>COMET-22 为主；另报告 BLEU、chrF、XCOMET、COMETKiwi、BLEURT 等。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Continued Pre-training on Sentence Analogies for Translation with Small Data</span>
+              <span class="note">Khalifa et al.</span>
+              <span class="tag">low-resource CPT</span>
+            </td>
+            <td>2024-05</td>
+            <td>LREC-COLING 2024</td>
+            <td>mBART-large-50。</td>
+            <td>提出 CPoA：从源语和目标语两侧检索句子类比，用 “A:B::C:[mask]” 的 analogy objective 做 continued pretraining，再在平行数据上 fine-tune MT。</td>
+            <td>WMT20 German-Upper Sorbian 低资源任务数据；训练集 60K 平行句，另有 10K 小数据设置。</td>
+            <td>按 analogical coverage 阈值筛选类比；德语侧用 Berkeley Neural Parser 辅助模式抽取；Upper Sorbian 侧用 Anymalign / Cutnalign 做子句对齐；CPT 类比数据 90/10 切分。</td>
+            <td>
+              <ul>
+                <li>60K 设置：普通 CP 用两侧各 60K 单语句；CPoA 在高阈值下约 11K close analogies。</li>
+                <li>10K 设置：类比样本可少至几十到数千级。</li>
+              </ul>
+            </td>
+            <td>WMT20 de↔hsb dev/test；另用 2K perfect analogies 测 analogy-solving。</td>
+            <td>BLEU；analogy-solving 用 Levenshtein distance。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Enhancing Translation Accuracy of LLMs through Continual Pre-Training on Parallel Data</span>
+              <span class="note">Kondo et al.</span>
+              <span class="tag">parallel-data CPT</span>
+            </td>
+            <td>2024-08</td>
+            <td>IWSLT 2024</td>
+            <td>rinna/bilingual-gpt-neox-4b；另与 Transformer encoder-decoder、Direct-SFT 等比较。</td>
+            <td>用英日平行数据做 CLM continued pretraining；比较 Mono、En-Ja、Ja-En、Mix，以及 interleaved / prefixed / tagged / JSON 等格式；之后做少量 SFT。</td>
+            <td>JParaCrawl v3.0 英日平行语料；SFT 使用 WMT20 dev/test、FLORES-200、KFTT 等。</td>
+            <td>用 LEALLA-large 语义相似度从 JParaCrawl 中采样高质量对；保留相似度约 0.4-0.95 的句对以剔除不合适样本。</td>
+            <td>
+              <ul>
+                <li>CPT：20.8M 句对，1 epoch，context length 2048。</li>
+                <li>Mix 设置：10.4M En-Ja + 10.4M Ja-En。</li>
+                <li>SFT：每方向约 15K 样本。</li>
+              </ul>
+            </td>
+            <td>13 个英日测试集，包括 ASPEC、JESC、KFTT、TED/IWSLT、BSD、WMT Robustness、WMT22 GMT 等。</td>
+            <td>sacreBLEU、COMET-22，并做显著性检验。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Multilingual MT with Open LLMs at Practical Scale: An Empirical Study</span>
+              <span class="note">GemmaX2</span>
+              <span class="tag">parallel-first CPT</span>
+            </td>
+            <td>2025-02</td>
+            <td>NAACL 2025 Long</td>
+            <td>主要 backbone 为 Gemma2-9B；对比 Mistral-7B-v0.3、Qwen2/2.5-7B、LLaMA3/3.1-8B、Gemma2-2B 等。</td>
+            <td>提出 PFMS：Parallel-First Monolingual-Second。每种语言优先使用平行数据，不足部分用单语补足；平行句按 source-target 或 target-source 拼接并随机方向训练。</td>
+            <td>单语：CulturaX、MADLAD-400；平行：OPUS 中英中心与英语中心语料，收集至 2024-08。</td>
+            <td>平行数据去重、启发式过滤、fastText 语言识别、LaBSE 与 MuSR 语义相似度过滤；保留相似度 0.75-0.99。单语数据使用已清洗/审核版本。</td>
+            <td>
+              <ul>
+                <li>28 种语言；清洗后约 3.4B 句对。</li>
+                <li>目标为每语言 2B tokens；低资源语言可能不足。</li>
+                <li>SFT 约 196K 平行样本。</li>
+              </ul>
+            </td>
+            <td>FLORES-200、WMT-24。</td>
+            <td>FLORES：spBLEU、COMET；WMT-24：XCOMET-XXL、COMETKiwi；另分析 tokenizer length ratio。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">X-ALMA: Plug &amp; Play Modules and Adaptive Rejection for Quality Translation at Scale</span>
+              <span class="note">Xu et al.</span>
+              <span class="tag">modular MT CPT</span>
+            </td>
+            <td>2025-03</td>
+            <td>ICLR 2025 Spotlight</td>
+            <td>ALMA-13B-Pretrain / LLaMA-2-13B；训练语言专属 LS Modules，每个模块约为基座参数的 15%。</td>
+            <td>三阶段 pre-training：Stage 1 训练基座多语能力；Stage 2 冻结基座、用单语数据训练语言组 LS modules；Stage 3 用平行句拼接成 pseudo-monolingual 序列继续训练 LS modules；后续 SFT 与 ARPO。</td>
+            <td>Stage 1/2：OSCAR 单语；Stage 3：NLLB、OPUS 平行语料；SFT：FLORES-200 dev、NTREX、WMT 2015-2022 test data。</td>
+            <td><span class="unknown">-</span></td>
+            <td>
+              <ul>
+                <li>Stage 1：50 语言、20B 单语 tokens。</li>
+                <li>Stage 2：每个 LS module 10B 单语 tokens。</li>
+                <li>Stage 3：每个 LS module 1.25B pseudo-monolingual tokens。</li>
+                <li>SFT：每方向约 3K-7K，平均约 4K。</li>
+              </ul>
+            </td>
+            <td>FLORES-200、WMT23。</td>
+            <td>COMET-22 为主；附录报告 XCOMET-XL、BLEU。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Tower+: Bridging Generality and Translation Specialization in Multilingual LLMs</span>
+              <span class="note">Alves et al.</span>
+              <span class="tag">large-scale MT CPT</span>
+            </td>
+            <td>2025-06</td>
+            <td>arXiv / Technical Report</td>
+            <td>Gemma 2 9B 为主要消融 backbone；发布/对比 2B、9B、72B Tower+ 系列，并与 Qwen2.5 等比较。</td>
+            <td>CPT 使用 next-token prediction；混合单语、平行与 instruction-like 数据。平行数据被格式化为翻译指令模板。CPT 后将 translation-specialized checkpoint 与原基座做 checkpoint merge，再进入 SFT、WPO、RLVR。</td>
+            <td>单语：FineWeb-Edu；平行：主要 OPUS；文档级：EuroParl、ParaDocs、CosmoPedia-v2；instruction-like：从 FineWeb-Edu 通过 DSIR 采样。</td>
+            <td>单语用 EuroFilter-v1；平行用 COMETKiwi adequacy 过滤；instruction-like 数据用 DSIR 贴近高质量 instruction 数据分布。</td>
+            <td>32B tokens；27 种语言/方言，47 个语言对；66% 单语 + 33% 平行 + 1% instruction-following。</td>
+            <td>WMT24++、IF-MT、M-ArenaHard、IFEval。</td>
+            <td>WMT24++ 主指标 XCOMET-XXL；另报告 MetricX24-XXL、chrF；IF-MT 分 MT quality 与 instruction following。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Patent Claim Translation via Continual Pre-training of LLMs with Parallel Data</span>
+              <span class="note">Matsumoto et al.</span>
+              <span class="tag">domain CPT</span>
+            </td>
+            <td>2025-06</td>
+            <td>MTSummit 2025</td>
+            <td>rinna/llama-3-youko-8b；另与 Transformer Big、公用 JParaCrawl/WMT 训练基线、GPT-4o few-shot 比较。</td>
+            <td>沿用 Kondo et al. 的 parallel-data CPT：在专利平行语料上继续训练，再对专利 claim 翻译做 SFT；输入格式为日语句 + 英语句。</td>
+            <td>JaParaPat 日英专利平行语料，来自 JPO/USPTO 专利申请；CPT 用 2016-2020 子集，SFT/test 用 2021 专利 claims。</td>
+            <td>JaParaPat 通过专利族文档对齐、句切分与 MT-based sentence alignment 构建；SFT/test 用 LaBSE 相似度过滤，SFT 约 0.8-0.95，test 约 0.9-0.95 且长度超过 100 words。</td>
+            <td>CPT 约 61M 句对；每 0.1 epoch / 6.1M 句对存 checkpoint；约 30.5M 句对时已获得大部分收益。</td>
+            <td>2021 JaParaPat patent-claim test set；另有 100 样本 GPT-4o reference 与人工质性分析。</td>
+            <td>sacreBLEU、COMET-22；句级 BLEU/COMET；显著性检验。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Hunyuan-MT Technical Report</span>
+              <span class="note">Tencent Hunyuan Team</span>
+              <span class="tag">industrial MT pretraining</span>
+            </td>
+            <td>2025-09</td>
+            <td>arXiv / Technical Report</td>
+            <td>Hunyuan-7B-Base；产出 Hunyuan-MT-7B 与 Hunyuan-MT-Chimera-7B。</td>
+            <td>训练流程为 general pre-training → MT-oriented pre-training → SFT → RL → weak-to-strong RL。MT-oriented 阶段混合单语与双语语料，并用 RegMix 类似方法确定最优混合比例；加入 20% 原始预训练语料 replay 缓解遗忘。</td>
+            <td>General pretraining：1.3T tokens 多语语料，覆盖 112 种语言/方言；MT-oriented：单语 mC4、OSCAR；双语 OPUS、ParaCrawl 等公开平行语料。</td>
+            <td>单语：fastText 语言识别、minLSH 文档去重、KenLM 困惑度质量过滤；双语：CometKiwi 等 reference-free QE 过滤。General pretraining 还用自研质量评估模型做 Knowledge Value / Authenticity / Writing Style 打分与分类配比。</td>
+            <td>
+              <ul>
+                <li>General pretraining 多语部分：1.3T tokens。</li>
+                <li>MT-oriented pretraining 具体总 token 与单/双语比例未在当前片段中给出。</li>
+                <li>原始预训练语料 replay：20%。</li>
+              </ul>
+            </td>
+            <td>FLORES-200、WMT24pp、WMT2025 shared task、Mandarin⇔Minority translation。</td>
+            <td>XCOMET-XXL；后续 SFT/RL 还使用 CometKiwi、GEMBA/DeepSeek-V3 evaluator 等质量信号。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">From Unaligned to Aligned: Scaling Multilingual LLMs with Multi-Way Parallel Corpora</span>
+              <span class="note">Liu et al.</span>
+              <span class="tag">multi-way parallel CPT</span>
+            </td>
+            <td>2025-11</td>
+            <td>EMNLP 2025 Main</td>
+            <td>LLaMA-3.1-8B / LLaMA-3.1-8B-Instruct；Qwen-2.5-14B / Qwen-2.5-14B-Instruct；LoRA 训练。</td>
+            <td>用 multi-way parallel TED2025 做 continued pretraining，并与 unaligned multilingual CPT 做固定 token 规模对照；还研究 MT、CLTS、MTC、CLP 等 instruction-tuning objectives。</td>
+            <td>Aligned：TED2025，多语 TED Talks，113 语言、352 domains、最多 50-way parallel、4,765 language pairs；Unaligned：DCAD-2000。</td>
+            <td>TED2025 基于人工验证 TED 翻译与人工时间戳做句级对齐；论文用 COMET-QE 比较数据质量；未看到额外过滤阈值。</td>
+            <td>主对照固定 CPT 为 5M tokens；规模实验采样 10K 到 1B tokens。</td>
+            <td>MMMLU、XCOPA、FLORES-101、FLORES-200、xIFEval、SIB-200；另分析 32 aligned languages 的表征对齐。</td>
+            <td>Accuracy；BLEU、COMET；cosine similarity、CKA、retrieval P@1/P@5/P@10、SVCCA；COMET-QE 用于数据质量分析。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">HY-MT1.5 Technical Report</span>
+              <span class="note">Tencent Hunyuan Team</span>
+              <span class="tag">compact MT pipeline</span>
+            </td>
+            <td>2025-12</td>
+            <td>arXiv / Technical Report</td>
+            <td>HY-1.8B-Base、HY-7B-Base；产出 HY-MT1.5-1.8B-preview、HY-MT1.5-7B、HY-MT1.5-1.8B。</td>
+            <td>沿用 Hunyuan-MT 的 MT-oriented pretraining + SFT；完整 pipeline 为 MT-oriented pretraining → SFT → on-policy distillation → RL。1.8B 通过 7B teacher 做 strong-to-weak on-policy distillation。</td>
+            <td>MT-oriented 阶段引用 Hunyuan-MT 方案：高质量多语单语语料与平行文本；distillation 阶段收集约 1M 单语 samples，覆盖 33 种支持语言。</td>
+            <td>MT-oriented 阶段细节指向 Hunyuan-MT；distillation 数据清洗未在当前片段中展开。</td>
+            <td>CPT 总量与单/双语配比未在当前片段中给出；distillation 数据约 1M 单语 samples。</td>
+            <td>FLORES-200、WMT25、Mandarin⇔Minority Testset。</td>
+            <td>XCOMET-XXL、CometKiwi。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Hy-MT2: Fast, Efficient and Powerful Multilingual Translation Models in the Wild</span>
+              <span class="note">Tencent Hunyuan Team</span>
+              <span class="tag">MT-oriented mid-training</span>
+            </td>
+            <td>2026-05</td>
+            <td>arXiv / Technical Report</td>
+            <td>Hy-series Pretraining Model；发布 Hy-MT2-1.8B、Hy-MT2-7B、Hy-MT2-30B-A3B MoE。</td>
+            <td>MT-oriented Mid-training → Family-Centric Post-training → Quantization。Mid-training 继续训练大规模多语 translation-related 数据；FCPT 包括 Reference-Guided OPD、Family-specific RL、Cross-family OPD。</td>
+            <td>大规模多语 translation-related 数据；包含 multilingual monolingual corpus 与 parallel translation corpus，覆盖 general translation、domain-specific translation、real-world scenarios、instruction-following examples。</td>
+            <td>当前片段只说明数据覆盖与后续 benchmark 构建的清洗/过滤/人工翻译标注；mid-training 具体清洗阈值未确认。</td>
+            <td>约 1T tokens；单语/平行/场景配比未在当前片段中给出。</td>
+            <td>FLORES-200、WMT25、Mandarin⇔Minority Testset、WildMTBench、DomainMTBench、IFMTBench、IFBench、IFEval、MaXIFE、Multi-IF。</td>
+            <td>General MT：XCOMET-XXL、CometKiwi、GEMBA；Domain/WildMTBench：XCOMET、GEMBA；instruction-following 使用对应 benchmark 分数。</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      备注：ALMA 的 Stage 1 在论文术语中是 monolingual data fine-tuning；这里为了时间线完整放入表格，但已单独标注其与典型 CPT 的差异。
+    </footer>
+  </main>
+</body>
+</html>
