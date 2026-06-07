@@ -178,7 +178,7 @@
   <main>
     <header>
       <h1>MT-oriented Pretraining 论文时间线汇总</h1>
-      <p class="subtitle">按 ALMA 系列、Tower 系列、Hunyuan-MT 系列、低资源语言扩展、数据相关五部分组织；每部分内部按发布时间排序。信息来自当前 Zotero PDF/元数据与已抽取文本，未确认信息用 “-” 标记。</p>
+      <p class="subtitle">按 ALMA 系列、Tower 系列、Hunyuan-MT 系列、低资源语言扩展、Seed 系列、数据相关六部分组织；每部分内部按发布时间排序。信息来自当前 Zotero PDF/元数据与已抽取文本，未确认信息用 “-” 标记。</p>
     </header>
 
     <section class="table-shell" aria-label="MT-oriented pretraining summary table">
@@ -447,6 +447,34 @@
           </tr>
 
           <tr class="group-row">
+            <td colspan="11">Seed 系列<span class="note">ByteDance Seed-X 路线：从头构建多语翻译 LLM，并结合 SFT/RL 提升翻译质量。</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Seed-X: Building Strong Multilingual Translation LLM with 7B Parameters</span>
+              <span class="note">Cheng et al.</span>
+              <span class="tag">from-scratch MT pretraining</span>
+            </td>
+            <td>从头训练 7B 多语翻译 LLM，系统整合单语、双语、SFT 与 RL，追求接近闭源模型的 28 语言翻译质量。</td>
+            <td>2025-07</td>
+            <td>arXiv / Technical Report</td>
+            <td>从头预训练的 7B Seed-X base；后续发布 instruct model、RL model 和 reward model。</td>
+            <td>三阶段预训练：S1 general stage 使用主流语言大规模单语数据；S2 multilingual-dominant stage 提高多语单语和双语数据比例；S3 parallel-only stage 用多轮重写/过滤后的高质量双语数据继续训练。之后做 translation SFT 与 PPO-based RL。</td>
+            <td>单语：28 语言共 6T tokens；双语：先从公开 web data 收集约 200B tokens seed bilingual data，再用临时翻译模型翻译、改写、过滤，迭代生成更高质量 pseudo/parallel data。</td>
+            <td>单语用文档级质量评估模型分 high/medium/low 三档：高质量保留、中质量用 LLM paraphrase、低质量剔除；双语用语言识别置信度、word alignment 指标、多轮 LLM filtering/rewriting 和 poor-quality pair filtering。</td>
+            <td>
+              <ul>
+                <li>单语预训练数据：6T tokens。</li>
+                <li>seed bilingual data：约 200B tokens。</li>
+                <li>SFT：236K translation-only instruction instances。</li>
+              </ul>
+            </td>
+            <td>FLORES-200 756 directions、WMT-25 English-to-X 25 target languages、Seed-X-Challenge；另有内部 ZH↔EN 测试。</td>
+            <td>XCOMET-XL、BLEURT；表格中也报告 COMET/BLEURT，RL 阶段避免直接用 BLEU/BLEURT/COMET 作 reward。</td>
+          </tr>
+
+          <tr class="group-row">
             <td colspan="11">数据相关<span class="note">围绕 MT-oriented CPT/mid-training 的数据形式、规模、配比、构造和低资源覆盖。</span></td>
           </tr>
 
@@ -498,29 +526,7 @@
             <td>FLORES：spBLEU、COMET；WMT-24：XCOMET-XXL、COMETKiwi；另分析 tokenizer length ratio。</td>
           </tr>
 
-          <tr>
-            <td>
-              <span class="paper">Seed-X: Building Strong Multilingual Translation LLM with 7B Parameters</span>
-              <span class="note">Cheng et al.</span>
-              <span class="tag">from-scratch MT pretraining</span>
-            </td>
-            <td>从头训练 7B 多语翻译 LLM，系统整合单语、双语、SFT 与 RL，追求接近闭源模型的 28 语言翻译质量。</td>
-            <td>2025-07</td>
-            <td>arXiv / Technical Report</td>
-            <td>从头预训练的 7B Seed-X base；后续发布 instruct model、RL model 和 reward model。</td>
-            <td>三阶段预训练：S1 general stage 使用主流语言大规模单语数据；S2 multilingual-dominant stage 提高多语单语和双语数据比例；S3 parallel-only stage 用多轮重写/过滤后的高质量双语数据继续训练。之后做 translation SFT 与 PPO-based RL。</td>
-            <td>单语：28 语言共 6T tokens；双语：先从公开 web data 收集约 200B tokens seed bilingual data，再用临时翻译模型翻译、改写、过滤，迭代生成更高质量 pseudo/parallel data。</td>
-            <td>单语用文档级质量评估模型分 high/medium/low 三档：高质量保留、中质量用 LLM paraphrase、低质量剔除；双语用语言识别置信度、word alignment 指标、多轮 LLM filtering/rewriting 和 poor-quality pair filtering。</td>
-            <td>
-              <ul>
-                <li>单语预训练数据：6T tokens。</li>
-                <li>seed bilingual data：约 200B tokens。</li>
-                <li>SFT：236K translation-only instruction instances。</li>
-              </ul>
-            </td>
-            <td>FLORES-200 756 directions、WMT-25 English-to-X 25 target languages、Seed-X-Challenge；另有内部 ZH↔EN 测试。</td>
-            <td>XCOMET-XL、BLEURT；表格中也报告 COMET/BLEURT，RL 阶段避免直接用 BLEU/BLEURT/COMET 作 reward。</td>
-          </tr>
+
 
           <tr>
             <td>
