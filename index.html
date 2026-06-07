@@ -66,7 +66,7 @@
       border-collapse: separate;
       border-spacing: 0;
       width: 100%;
-      min-width: 2200px;
+      min-width: 2450px;
       table-layout: fixed;
       font-size: 13px;
     }
@@ -186,6 +186,7 @@
         <thead>
           <tr>
             <th>文章</th>
+            <th>主要目标</th>
             <th>发布时间</th>
             <th>发布顶会</th>
             <th>训练 baseline 模型</th>
@@ -199,7 +200,7 @@
         </thead>
         <tbody>
           <tr class="group-row">
-            <td colspan="10">ALMA 系列<span class="note">ALMA/ALMA-X 路线：先增强多语/翻译能力，再做高质量翻译对齐。</span></td>
+            <td colspan="11">ALMA 系列<span class="note">ALMA/ALMA-X 路线：先增强多语/翻译能力，再做高质量翻译对齐。</span></td>
           </tr>
 
           <tr>
@@ -208,6 +209,7 @@
               <span class="note">Guo et al.</span>
               <span class="tag">MT-oriented adaptation</span>
             </td>
+            <td>用少量高质量平行数据把通用 LLM 改造成强翻译模型，并验证“单语能力补强 + 少量翻译 SFT”的两阶段范式。</td>
             <td>2024-02</td>
             <td>ICLR 2024</td>
             <td>LLaMA-2-7B / LLaMA-2-13B；另用 MPT-7B 做部分对照。</td>
@@ -234,6 +236,7 @@
               <span class="note">Xu et al.</span>
               <span class="tag">modular MT CPT</span>
             </td>
+            <td>解决大规模多语翻译的可扩展性和质量控制问题，用语言专属模块与 adaptive rejection 提升长尾语言和部署灵活性。</td>
             <td>2025-03</td>
             <td>ICLR 2025 Spotlight</td>
             <td>ALMA-13B-Pretrain / LLaMA-2-13B；训练语言专属 LS Modules，每个模块约为基座参数的 15%。</td>
@@ -253,7 +256,7 @@
           </tr>
 
           <tr class="group-row">
-            <td colspan="10">Tower 系列<span class="note">开源多语翻译 LLM 路线，从 Tower 到 Tower+。</span></td>
+            <td colspan="11">Tower 系列<span class="note">开源多语翻译 LLM 路线，从 Tower 到 Tower-v2/Tower+。</span></td>
           </tr>
 
           <tr>
@@ -262,6 +265,7 @@
               <span class="note">Alves et al.</span>
               <span class="tag">general MT CPT</span>
             </td>
+            <td>构建开源 translation-related LLM，使一个模型覆盖翻译、后编辑、质量评估、术语/上下文翻译等工作流任务。</td>
             <td>2024-02</td>
             <td>COLM 2024</td>
             <td>LLaMA-2-7B / LLaMA-2-13B。</td>
@@ -275,10 +279,29 @@
 
           <tr>
             <td>
+              <span class="paper">Tower v2: Unbabel-IST 2024 Submission for the General MT Shared Task</span>
+              <span class="note">Rei et al.</span>
+              <span class="tag">WMT system / Tower iteration</span>
+            </td>
+            <td>面向 WMT24 General MT，把 Tower 扩到 15 语言与 70B，并结合更高质量数据和质量感知解码争取竞赛级翻译质量。</td>
+            <td>2024-11</td>
+            <td>WMT 2024</td>
+            <td>Tower-v2-7B 基于 Mistral-7B；Tower-v2-70B 基于 LLaMA-3-70B。</td>
+            <td>沿用并改进 Tower recipe：CPT + SFT；重点改进训练数据质量、扩展语言覆盖、增大模型容量，并在最终系统中使用 MBR、TRR 等 quality-aware decoding。</td>
+            <td>CPT 使用更高质量的单语数据与平行数据；从 10 语言扩展到 15 语言，新增 cs/is/hi/uk/ja，并加入 Czech-Ukrainian、Japanese-Chinese 等非英语中心平行数据；还加入文档级平行数据以提升长文本翻译。</td>
+            <td>强调提升 CPT/SFT 训练数据质量，并对平行数据与文档级数据做筛选；具体阈值在当前表格中暂不展开。</td>
+            <td>论文未在摘要/主表中给出统一 CPT token 总量；模型容量扩展到 7B 与 70B；语言覆盖从 10 扩展到 15。</td>
+            <td>WMT24 General Translation test set；WMT23 validation；WMT24 Chat Shared Task dev set；并做长文本/段落级分析。</td>
+            <td>MetricX-QE-XXL、MetricX-XXL、XCOMET-XXL、COMETKiwi-XXL；人工评估；MBR/TRR quality-aware decoding 对比。</td>
+          </tr>
+
+          <tr>
+            <td>
               <span class="paper">Tower+: Bridging Generality and Translation Specialization in Multilingual LLMs</span>
               <span class="note">Alves et al.</span>
               <span class="tag">large-scale MT CPT</span>
             </td>
+            <td>在通用指令能力和专业翻译能力之间取得平衡，形成从 2B 到 72B 的可扩展 Tower+ 翻译模型族。</td>
             <td>2025-06</td>
             <td>arXiv / Technical Report</td>
             <td>Gemma 2 9B 为主要消融 backbone；发布/对比 2B、9B、72B Tower+ 系列，并与 Qwen2.5 等比较。</td>
@@ -291,7 +314,7 @@
           </tr>
 
           <tr class="group-row">
-            <td colspan="10">Hunyuan-MT 系列<span class="note">腾讯混元翻译模型技术报告路线，从 Hunyuan-MT 到 HY/Hy-MT2。</span></td>
+            <td colspan="11">Hunyuan-MT 系列<span class="note">腾讯混元翻译模型技术报告路线，从 Hunyuan-MT 到 HY/Hy-MT2。</span></td>
           </tr>
 
           <tr>
@@ -300,6 +323,7 @@
               <span class="note">Tencent Hunyuan Team</span>
               <span class="tag">industrial MT pretraining</span>
             </td>
+            <td>构建 33 语言开源专业翻译模型，重点提升中文与少数民族语言/方言以及 WMT25 多语方向质量。</td>
             <td>2025-09</td>
             <td>arXiv / Technical Report</td>
             <td>Hunyuan-7B-Base；产出 Hunyuan-MT-7B 与 Hunyuan-MT-Chimera-7B。</td>
@@ -323,6 +347,7 @@
               <span class="note">Tencent Hunyuan Team</span>
               <span class="tag">compact MT pipeline</span>
             </td>
+            <td>把 Hunyuan-MT 能力压缩到更小、更高效的 1.8B/7B 模型，并通过蒸馏和 RL 保持高翻译质量。</td>
             <td>2025-12</td>
             <td>arXiv / Technical Report</td>
             <td>HY-1.8B-Base、HY-7B-Base；产出 HY-MT1.5-1.8B-preview、HY-MT1.5-7B、HY-MT1.5-1.8B。</td>
@@ -340,6 +365,7 @@
               <span class="note">Tencent Hunyuan Team</span>
               <span class="tag">MT-oriented mid-training</span>
             </td>
+            <td>面向真实业务、专业领域、指令约束和端侧部署，进一步提升 Hy-MT 系列的实用翻译能力和效率。</td>
             <td>2026-05</td>
             <td>arXiv / Technical Report</td>
             <td>Hy-series Pretraining Model；发布 Hy-MT2-1.8B、Hy-MT2-7B、Hy-MT2-30B-A3B MoE。</td>
@@ -352,7 +378,7 @@
           </tr>
 
           <tr class="group-row">
-            <td colspan="10">数据相关<span class="note">围绕 MT-oriented CPT/mid-training 的数据形式、规模、配比、构造和低资源覆盖。</span></td>
+            <td colspan="11">数据相关<span class="note">围绕 MT-oriented CPT/mid-training 的数据形式、规模、配比、构造和低资源覆盖。</span></td>
           </tr>
 
           <tr>
@@ -361,6 +387,7 @@
               <span class="note">Lu et al.</span>
               <span class="tag">massively multilingual CPT</span>
             </td>
+            <td>把 LLaMA 的翻译能力扩展到 100+ 语言，尤其补低资源语言覆盖，并分析词表扩展与数据增强策略。</td>
             <td>2024-07 / 2024-11</td>
             <td>Findings EMNLP 2024</td>
             <td>LLaMA-2-7B、LLaMA-3-8B；instruction 对齐版本使用 Alpaca 风格数据。</td>
@@ -378,6 +405,7 @@
               <span class="note">Kondo et al.</span>
               <span class="tag">parallel-data CPT</span>
             </td>
+            <td>验证平行数据 CPT 对 LLM 翻译能力的作用，找出英日翻译中更有效的数据格式和 CPT+SFT 配方。</td>
             <td>2024-08</td>
             <td>IWSLT 2024</td>
             <td>rinna/bilingual-gpt-neox-4b；另与 Transformer encoder-decoder、Direct-SFT 等比较。</td>
@@ -401,6 +429,7 @@
               <span class="note">GemmaX2</span>
               <span class="tag">parallel-first CPT</span>
             </td>
+            <td>在实用规模下探索 open LLM 多语 MT 的数据混合策略，提出 parallel-first 的 GemmaX2 训练方案。</td>
             <td>2025-02</td>
             <td>NAACL 2025 Long</td>
             <td>主要 backbone 为 Gemma2-9B；对比 Mistral-7B-v0.3、Qwen2/2.5-7B、LLaMA3/3.1-8B、Gemma2-2B 等。</td>
@@ -424,6 +453,7 @@
               <span class="note">Ji et al.</span>
               <span class="tag">bilingual-data CPT</span>
             </td>
+            <td>研究双语翻译数据在 500 语言 LLM 继续预训练中的作用，并发布 MaLA/EMMA-500 Llama 3 系列资源。</td>
             <td>2025-06</td>
             <td>arXiv / Technical Report</td>
             <td>LLaMA-3-8B、LLaMA-3.1-8B；发布 EMMA-500 Llama 3/3.1 Mono/Bi 四个模型。</td>
@@ -447,6 +477,7 @@
               <span class="note">Cheng et al.</span>
               <span class="tag">from-scratch MT pretraining</span>
             </td>
+            <td>从头训练 7B 多语翻译 LLM，系统整合单语、双语、SFT 与 RL，追求接近闭源模型的 28 语言翻译质量。</td>
             <td>2025-07</td>
             <td>arXiv / Technical Report</td>
             <td>从头预训练的 7B Seed-X base；后续发布 instruct model、RL model 和 reward model。</td>
@@ -470,6 +501,7 @@
               <span class="note">Liu et al.</span>
               <span class="tag">multi-way parallel CPT</span>
             </td>
+            <td>证明 multi-way parallel corpora 可提升多语 LLM 表征对齐和非英语中心翻译，强调“对齐数据”而非只堆 unaligned 数据。</td>
             <td>2025-11</td>
             <td>EMNLP 2025 Main</td>
             <td>LLaMA-3.1-8B / LLaMA-3.1-8B-Instruct；Qwen-2.5-14B / Qwen-2.5-14B-Instruct；LoRA 训练。</td>
@@ -487,6 +519,7 @@
               <span class="note">Omnilingual MT Team</span>
               <span class="tag">omnilingual CPT</span>
             </td>
+            <td>把 MT 覆盖扩展到 1,600 语言，结合海量单语/平行/合成数据、评估集和 OMT-LLaMA/OMT-NLLB 路线。</td>
             <td>2026-03</td>
             <td>arXiv / Technical Report</td>
             <td>OMT-LLaMA 基于 LLaMA-3.1-8B-Instruct；另构建 1B/3B 版本与 OMT-NLLB 路线。</td>
