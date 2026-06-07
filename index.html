@@ -383,48 +383,6 @@
 
           <tr>
             <td>
-              <span class="paper">LLaMAX: Scaling Linguistic Horizons of LLM by Enhancing Translation Capabilities Beyond 100 Languages</span>
-              <span class="note">Lu et al.</span>
-              <span class="tag">massively multilingual CPT</span>
-            </td>
-            <td>把 LLaMA 的翻译能力扩展到 100+ 语言，尤其补低资源语言覆盖，并分析词表扩展与数据增强策略。</td>
-            <td>2024-07 / 2024-11</td>
-            <td>Findings EMNLP 2024</td>
-            <td>LLaMA-2-7B、LLaMA-3-8B；instruction 对齐版本使用 Alpaca 风格数据。</td>
-            <td>在 LLaMA 系列上做大规模 multilingual continual pretraining，目标是把翻译能力扩展到 FLORES-101 覆盖的 100+ 语言；核心分析包括是否扩展词表、如何做低资源数据增强、以及单语和平行数据如何组织。</td>
-            <td>单语：mC4、MADLAD-400，覆盖 102 语言；平行：Lego-MT 102 语言、4,737 language pairs；低资源增强使用 MUSE、PanLex 字典构造 pseudo-parallel data。</td>
-            <td>论文强调保留原始 LLaMA vocabulary，避免新增 token 破坏原模型分布；低资源语料通过字典覆盖率与 pseudo-parallel 构造增强。具体通用清洗阈值未展开。</td>
-            <td>continual pretraining 使用超过 64B tokens；LLaMAX2 训练约 60 天。平行句对按 source-target 拼接成单条训练序列。</td>
-            <td>FLORES-101、FLORES-200；另有 WMT23、TED、TICO，以及 XNLI、MGSM、MMLU 等多语泛化评估。</td>
-            <td>spBLEU、COMET；多语理解/推理任务使用对应 accuracy 等指标。</td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="paper">Enhancing Translation Accuracy of LLMs through Continual Pre-Training on Parallel Data</span>
-              <span class="note">Kondo et al.</span>
-              <span class="tag">parallel-data CPT</span>
-            </td>
-            <td>验证平行数据 CPT 对 LLM 翻译能力的作用，找出英日翻译中更有效的数据格式和 CPT+SFT 配方。</td>
-            <td>2024-08</td>
-            <td>IWSLT 2024</td>
-            <td>rinna/bilingual-gpt-neox-4b；另与 Transformer encoder-decoder、Direct-SFT 等比较。</td>
-            <td>用英日平行数据做 CLM continued pretraining；比较 Mono、En-Ja、Ja-En、Mix，以及 interleaved / prefixed / tagged / JSON 等格式；之后做少量 SFT。</td>
-            <td>JParaCrawl v3.0 英日平行语料；SFT 使用 WMT20 dev/test、FLORES-200、KFTT 等。</td>
-            <td>用 LEALLA-large 语义相似度从 JParaCrawl 中采样高质量对；保留相似度约 0.4-0.95 的句对以剔除不合适样本。</td>
-            <td>
-              <ul>
-                <li>CPT：20.8M 句对，1 epoch，context length 2048。</li>
-                <li>Mix 设置：10.4M En-Ja + 10.4M Ja-En。</li>
-                <li>SFT：每方向约 15K 样本。</li>
-              </ul>
-            </td>
-            <td>13 个英日测试集，包括 ASPEC、JESC、KFTT、TED/IWSLT、BSD、WMT Robustness、WMT22 GMT 等。</td>
-            <td>sacreBLEU、COMET-22，并做显著性检验。</td>
-          </tr>
-
-          <tr>
-            <td>
               <span class="paper">Multilingual MT with Open LLMs at Practical Scale: An Empirical Study</span>
               <span class="note">GemmaX2</span>
               <span class="tag">parallel-first CPT</span>
