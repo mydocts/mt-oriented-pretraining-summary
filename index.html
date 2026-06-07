@@ -178,7 +178,7 @@
   <main>
     <header>
       <h1>MT-oriented Pretraining 论文时间线汇总</h1>
-      <p class="subtitle">按 ALMA 系列、Tower 系列、Hunyuan-MT 系列、数据相关四部分组织；每部分内部按发布时间排序。信息来自当前 Zotero PDF/元数据与已抽取文本，未确认信息用 “-” 标记。</p>
+      <p class="subtitle">按 ALMA 系列、Tower 系列、Hunyuan-MT 系列、低资源语言扩展、数据相关五部分组织；每部分内部按发布时间排序。信息来自当前 Zotero PDF/元数据与已抽取文本，未确认信息用 “-” 标记。</p>
     </header>
 
     <section class="table-shell" aria-label="MT-oriented pretraining summary table">
@@ -378,7 +378,100 @@
           </tr>
 
           <tr class="group-row">
+            <td colspan="11">低资源语言扩展<span class="note">面向 100+、500+、1600 语言覆盖的 multilingual / massively multilingual MT-oriented CPT 路线。</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">LLaMAX: Scaling Linguistic Horizons of LLM by Enhancing Translation Capabilities Beyond 100 Languages</span>
+              <span class="note">Lu et al.</span>
+              <span class="tag">massively multilingual CPT</span>
+            </td>
+            <td>把 LLaMA 的翻译能力扩展到 100+ 语言，尤其补低资源语言覆盖，并分析词表扩展与数据增强策略。</td>
+            <td>2024-07 / 2024-11</td>
+            <td>Findings EMNLP 2024</td>
+            <td>LLaMA-2-7B、LLaMA-3-8B；instruction 对齐版本使用 Alpaca 风格数据。</td>
+            <td>在 LLaMA 系列上做大规模 multilingual continual pretraining，目标是把翻译能力扩展到 FLORES-101 覆盖的 100+ 语言；核心分析包括是否扩展词表、如何做低资源数据增强、以及单语和平行数据如何组织。</td>
+            <td>单语：mC4、MADLAD-400，覆盖 102 语言；平行：Lego-MT 102 语言、4,737 language pairs；低资源增强使用 MUSE、PanLex 字典构造 pseudo-parallel data。</td>
+            <td>论文强调保留原始 LLaMA vocabulary，避免新增 token 破坏原模型分布；低资源语料通过字典覆盖率与 pseudo-parallel 构造增强。具体通用清洗阈值未展开。</td>
+            <td>continual pretraining 使用超过 64B tokens；LLaMAX2 训练约 60 天。平行句对按 source-target 拼接成单条训练序列。</td>
+            <td>FLORES-101、FLORES-200；另有 WMT23、TED、TICO，以及 XNLI、MGSM、MMLU 等多语泛化评估。</td>
+            <td>spBLEU、COMET；多语理解/推理任务使用对应 accuracy 等指标。</td>
+          </tr>
+          <tr>
+            <td>
+              <span class="paper">Massively Multilingual Adaptation of LLMs Using Bilingual Translation Data / EMMA-500 Gen 2</span>
+              <span class="note">Ji et al.</span>
+              <span class="tag">bilingual-data CPT</span>
+            </td>
+            <td>研究双语翻译数据在 500 语言 LLM 继续预训练中的作用，并发布 MaLA/EMMA-500 Llama 3 系列资源。</td>
+            <td>2025-06</td>
+            <td>arXiv / Technical Report</td>
+            <td>LLaMA-3-8B、LLaMA-3.1-8B；发布 EMMA-500 Llama 3/3.1 Mono/Bi 四个模型。</td>
+            <td>研究 massively multilingual continual pretraining 中加入 bilingual translation data 的影响；构造 monolingual mix 与 bilingual mix 对照，使用 causal LM objective 继续训练 LLaMA 3 系列。</td>
+            <td>MaLA bilingual translation corpus：OPUS、NLLB、Tatoeba 等来源，覆盖 500+ 语言、2,507 language pairs；同时混合 cleaned/deduplicated MaLA 单语语料、事实/百科/代码/指令等多类型数据。</td>
+            <td>语言/脚本识别、语言代码规范化、dataset-specific cleaning、去重；处理 Tatoeba 等语料中的重复/噪声句对；按资源等级做统计和采样。</td>
+            <td>
+              <ul>
+                <li>MaLA translation corpus 清洗后超过 426B tokens。</li>
+                <li>Mono mix：25K steps，约 419B LLaMA-3 tokens。</li>
+                <li>Bi mix：40K steps，最多 671B tokens。</li>
+              </ul>
+            </td>
+            <td>7 类任务、12 个 benchmarks；低资源重点包括 FLORES-200、SIB-200、Taxi1500 等。</td>
+            <td>MT 使用 FLORES-200 对应翻译指标；其他任务报告分类、推理、阅读理解等 benchmark 分数。当前抽取文本中未见统一单一 MT 指标名称。</td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Omnilingual MT: Machine Translation for 1,600 Languages</span>
+              <span class="note">Omnilingual MT Team</span>
+              <span class="tag">omnilingual CPT</span>
+            </td>
+            <td>把 MT 覆盖扩展到 1,600 语言，结合海量单语/平行/合成数据、评估集和 OMT-LLaMA/OMT-NLLB 路线。</td>
+            <td>2026-03</td>
+            <td>arXiv / Technical Report</td>
+            <td>OMT-LLaMA 基于 LLaMA-3.1-8B-Instruct；另构建 1B/3B 版本与 OMT-NLLB 路线。</td>
+            <td>OMT-LLaMA 使用 multilingual continual pretraining + post-training + retrieval-augmented translation；CPT 同时做 monolingual documents 的 language modeling 与 parallel documents 的 translation objective，并扩展 tokenizer 到 256K。</td>
+            <td>单语：CC-2000-Web、CC-2000-Pdf，覆盖 2000+ 可识别语言；平行：Bible、FLoRes+、SMOL、Indic corpora、KreyolMT、LTPP、MeDLEy 等；还用 backtranslation 和 bitext mining 构造 synthetic data。</td>
+            <td>URL 过滤低质量网页；GlotLID 识别语言；单语 backtranslation 前抽取 clean monolingual texts 并去噪；synthetic bitext 用相似度阈值和资源等级做过滤消融；MeDLEy 由专业翻译/人工构建。</td>
+            <td>
+              <ul>
+                <li>具体 CPT 总 token 未在当前片段中汇总给出。</li>
+                <li>CPT batch 按 Table 4.1 权重从多数据源 token streams 采样。</li>
+                <li>训练配置：最长 50K steps；sequence length 8192；tokenizer warmup 10K steps。</li>
+              </ul>
+            </td>
+            <td>FLoRes+、BOUQuET、Met-BOUQuET、Bible 1,560+ language varieties、FLoRes-Hard；覆盖 English-to-1,600 与多资源层级评估。</td>
+            <td>ChrF++、MetricX、xCOMET、BLASER 3；post-training 表中使用 xCOMET，RL reward 最终 50/50 组合 ChrF++ 与 MetricX。</td>
+          </tr>
+
+          <tr class="group-row">
             <td colspan="11">数据相关<span class="note">围绕 MT-oriented CPT/mid-training 的数据形式、规模、配比、构造和低资源覆盖。</span></td>
+          </tr>
+
+          <tr>
+            <td>
+              <span class="paper">Enhancing Translation Accuracy of LLMs through Continual Pre-Training on Parallel Data</span>
+              <span class="note">Kondo et al.</span>
+              <span class="tag">parallel-data CPT</span>
+            </td>
+            <td>验证平行数据 CPT 对 LLM 翻译能力的作用，找出英日翻译中更有效的数据格式和 CPT+SFT 配方。</td>
+            <td>2024-08</td>
+            <td>IWSLT 2024</td>
+            <td>rinna/bilingual-gpt-neox-4b；另与 Transformer encoder-decoder、Direct-SFT 等比较。</td>
+            <td>用英日平行数据做 CLM continued pretraining；比较 Mono、En-Ja、Ja-En、Mix，以及 interleaved / prefixed / tagged / JSON 等格式；之后做少量 SFT。</td>
+            <td>JParaCrawl v3.0 英日平行语料；SFT 使用 WMT20 dev/test、FLORES-200、KFTT 等。</td>
+            <td>用 LEALLA-large 语义相似度从 JParaCrawl 中采样高质量对；保留相似度约 0.4-0.95 的句对以剔除不合适样本。</td>
+            <td>
+              <ul>
+                <li>CPT：20.8M 句对，1 epoch，context length 2048。</li>
+                <li>Mix 设置：10.4M En-Ja + 10.4M Ja-En。</li>
+                <li>SFT：每方向约 15K 样本。</li>
+              </ul>
+            </td>
+            <td>13 个英日测试集，包括 ASPEC、JESC、KFTT、TED/IWSLT、BSD、WMT Robustness、WMT22 GMT 等。</td>
+            <td>sacreBLEU、COMET-22，并做显著性检验。</td>
           </tr>
 
           <tr>
@@ -403,30 +496,6 @@
             </td>
             <td>FLORES-200、WMT-24。</td>
             <td>FLORES：spBLEU、COMET；WMT-24：XCOMET-XXL、COMETKiwi；另分析 tokenizer length ratio。</td>
-          </tr>
-
-          <tr>
-            <td>
-              <span class="paper">Massively Multilingual Adaptation of LLMs Using Bilingual Translation Data / EMMA-500 Gen 2</span>
-              <span class="note">Ji et al.</span>
-              <span class="tag">bilingual-data CPT</span>
-            </td>
-            <td>研究双语翻译数据在 500 语言 LLM 继续预训练中的作用，并发布 MaLA/EMMA-500 Llama 3 系列资源。</td>
-            <td>2025-06</td>
-            <td>arXiv / Technical Report</td>
-            <td>LLaMA-3-8B、LLaMA-3.1-8B；发布 EMMA-500 Llama 3/3.1 Mono/Bi 四个模型。</td>
-            <td>研究 massively multilingual continual pretraining 中加入 bilingual translation data 的影响；构造 monolingual mix 与 bilingual mix 对照，使用 causal LM objective 继续训练 LLaMA 3 系列。</td>
-            <td>MaLA bilingual translation corpus：OPUS、NLLB、Tatoeba 等来源，覆盖 500+ 语言、2,507 language pairs；同时混合 cleaned/deduplicated MaLA 单语语料、事实/百科/代码/指令等多类型数据。</td>
-            <td>语言/脚本识别、语言代码规范化、dataset-specific cleaning、去重；处理 Tatoeba 等语料中的重复/噪声句对；按资源等级做统计和采样。</td>
-            <td>
-              <ul>
-                <li>MaLA translation corpus 清洗后超过 426B tokens。</li>
-                <li>Mono mix：25K steps，约 419B LLaMA-3 tokens。</li>
-                <li>Bi mix：40K steps，最多 671B tokens。</li>
-              </ul>
-            </td>
-            <td>7 类任务、12 个 benchmarks；低资源重点包括 FLORES-200、SIB-200、Taxi1500 等。</td>
-            <td>MT 使用 FLORES-200 对应翻译指标；其他任务报告分类、推理、阅读理解等 benchmark 分数。当前抽取文本中未见统一单一 MT 指标名称。</td>
           </tr>
 
           <tr>
@@ -471,29 +540,6 @@
             <td>Accuracy；BLEU、COMET；cosine similarity、CKA、retrieval P@1/P@5/P@10、SVCCA；COMET-QE 用于数据质量分析。</td>
           </tr>
 
-          <tr>
-            <td>
-              <span class="paper">Omnilingual MT: Machine Translation for 1,600 Languages</span>
-              <span class="note">Omnilingual MT Team</span>
-              <span class="tag">omnilingual CPT</span>
-            </td>
-            <td>把 MT 覆盖扩展到 1,600 语言，结合海量单语/平行/合成数据、评估集和 OMT-LLaMA/OMT-NLLB 路线。</td>
-            <td>2026-03</td>
-            <td>arXiv / Technical Report</td>
-            <td>OMT-LLaMA 基于 LLaMA-3.1-8B-Instruct；另构建 1B/3B 版本与 OMT-NLLB 路线。</td>
-            <td>OMT-LLaMA 使用 multilingual continual pretraining + post-training + retrieval-augmented translation；CPT 同时做 monolingual documents 的 language modeling 与 parallel documents 的 translation objective，并扩展 tokenizer 到 256K。</td>
-            <td>单语：CC-2000-Web、CC-2000-Pdf，覆盖 2000+ 可识别语言；平行：Bible、FLoRes+、SMOL、Indic corpora、KreyolMT、LTPP、MeDLEy 等；还用 backtranslation 和 bitext mining 构造 synthetic data。</td>
-            <td>URL 过滤低质量网页；GlotLID 识别语言；单语 backtranslation 前抽取 clean monolingual texts 并去噪；synthetic bitext 用相似度阈值和资源等级做过滤消融；MeDLEy 由专业翻译/人工构建。</td>
-            <td>
-              <ul>
-                <li>具体 CPT 总 token 未在当前片段中汇总给出。</li>
-                <li>CPT batch 按 Table 4.1 权重从多数据源 token streams 采样。</li>
-                <li>训练配置：最长 50K steps；sequence length 8192；tokenizer warmup 10K steps。</li>
-              </ul>
-            </td>
-            <td>FLoRes+、BOUQuET、Met-BOUQuET、Bible 1,560+ language varieties、FLoRes-Hard；覆盖 English-to-1,600 与多资源层级评估。</td>
-            <td>ChrF++、MetricX、xCOMET、BLASER 3；post-training 表中使用 xCOMET，RL reward 最终 50/50 组合 ChrF++ 与 MetricX。</td>
-          </tr>
         </tbody>
       </table>
     </section>
