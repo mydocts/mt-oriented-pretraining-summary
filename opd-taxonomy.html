@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>OPD Taxonomy 变量表</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --line: #d9dee8;
+      --head: #172033;
+      --head2: #eef3ff;
+      --accent: #225c8d;
+      --accent2: #9d3f45;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+
+    main {
+      width: min(1900px, calc(100vw - 40px));
+      margin: 28px auto 44px;
+    }
+
+    header {
+      margin-bottom: 18px;
+    }
+
+    nav {
+      margin-bottom: 14px;
+      font-size: 14px;
+    }
+
+    nav a,
+    footer a,
+    td a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(34, 92, 141, 0.28);
+    }
+
+    nav a:hover,
+    footer a:hover,
+    td a:hover {
+      border-bottom-color: currentColor;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      color: var(--head);
+      font-size: 28px;
+      line-height: 1.22;
+      letter-spacing: 0;
+    }
+
+    h2 {
+      margin: 28px 0 12px;
+      color: var(--head);
+      font-size: 20px;
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 1180px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 4px 10px;
+      border: 1px solid #c8d4e2;
+      border-radius: 999px;
+      background: #fff;
+      color: #344054;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .table-shell {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+      max-height: calc(100vh - 145px);
+    }
+
+    table {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    .matrix table {
+      min-width: 2500px;
+    }
+
+    .summary table {
+      min-width: 1000px;
+    }
+
+    th,
+    td {
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 12px;
+      vertical-align: top;
+      background: var(--panel);
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--head2);
+      color: #1b2a44;
+      font-weight: 700;
+      text-align: left;
+    }
+
+    .matrix th:first-child,
+    .matrix td:first-child,
+    .summary th:first-child,
+    .summary td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      width: 290px;
+      box-shadow: 1px 0 0 var(--line);
+    }
+
+    .summary th:first-child,
+    .summary td:first-child {
+      width: 230px;
+    }
+
+    th:first-child {
+      z-index: 3;
+    }
+
+    tr:nth-child(even) td {
+      background: #fbfcff;
+    }
+
+    tr:nth-child(even) td:first-child {
+      background: #fbfcff;
+    }
+
+    .paper {
+      font-weight: 750;
+      color: var(--head);
+    }
+
+    .method-tag {
+      display: inline-block;
+      margin-top: 7px;
+      padding: 2px 7px;
+      border: 1px solid #b9c9da;
+      border-radius: 999px;
+      color: var(--accent);
+      background: #f3f8fc;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .source-link {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 12px;
+      font-weight: 650;
+    }
+
+    .source-link::before {
+      content: "source: ";
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .weak {
+      color: var(--muted);
+    }
+
+    .summary td:first-child {
+      color: var(--accent2);
+      font-weight: 750;
+    }
+
+    footer {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 760px) {
+      main {
+        width: min(100vw - 20px, 1900px);
+        margin-top: 18px;
+      }
+
+      h1 {
+        font-size: 23px;
+      }
+
+      .matrix table {
+        min-width: 1900px;
+      }
+
+      .summary table {
+        min-width: 820px;
+      }
+
+      th,
+      td {
+        padding: 9px 10px;
+      }
+
+      .matrix th:first-child,
+      .matrix td:first-child {
+        width: 240px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav><a href="./index.html">← MT-oriented pretraining summary</a></nav>
+    <header>
+      <h1>OPD Taxonomy 变量表</h1>
+      <p class="subtitle">按 state source、teacher / feedback source、support、KL / update route、temporal credit、routing / gating、regularizer、evaluation split 八个变量整理经典 OPD / 邻近 OPD 方法。该表由 ChatGPT 对话中的研究笔记整理为可发布 HTML。</p>
+      <div class="meta" aria-label="page metadata">
+        <span class="pill">整理日期：2026-06-28</span>
+        <span class="pill">主表：16 个方法 × 8 个变量</span>
+        <span class="pill">适合横向滚动比较</span>
+      </div>
+    </header>
+
+    <section class="table-shell matrix" aria-label="OPD taxonomy matrix">
+      <table>
+        <thead>
+          <tr>
+            <th>论文 / 方法</th>
+            <th>state source</th>
+            <th>teacher / feedback source</th>
+            <th>support</th>
+            <th>KL / update route</th>
+            <th>temporal credit</th>
+            <th>routing / gating</th>
+            <th>regularizer</th>
+            <th>evaluation split</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="paper">GKD / On-Policy Distillation of Language Models</span><span class="method-tag">on-policy KD</span></td>
+            <td>student 自生成输出 + 固定数据混合</td>
+            <td>white-box teacher logits / token distribution</td>
+            <td>主要是 token-level teacher distribution；可用 full-vocab 或近似</td>
+            <td>direct distribution loss；可用 KL / generalized JSD 等</td>
+            <td>token-local，没有显式 return-to-go</td>
+            <td>主要靠 self-generated sequence 暴露 student mistakes；无复杂 gate</td>
+            <td>数据混合、loss 选择本身起稳定作用</td>
+            <td>summarization、translation、arithmetic reasoning、instruction-tuning；通常不做细粒度 OPD failure split <a class="source-link" href="https://arxiv.org/abs/2306.13649">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">MiniLLM</span><span class="method-tag">reverse KL</span></td>
+            <td>student / model-generated sequences，偏 on-policy optimization</td>
+            <td>white-box teacher distribution</td>
+            <td>主要围绕 sampled/generated sequence 上的 teacher-student 概率</td>
+            <td>reverse KL；用 policy-optimization / PG-style 思路优化</td>
+            <td>更接近 sequence-level reverse-KL 视角，但没有像 GAE 那样系统设计 credit</td>
+            <td>implicit softmax routing；没有显式替代 token routing</td>
+            <td>未作为主要变量报告</td>
+            <td>instruction-following；关注 quality、exposure bias、calibration、long-text generation <a class="source-link" href="https://arxiv.org/abs/2306.08543">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">DistiLLM</span><span class="method-tag">adaptive off-policy</span></td>
+            <td>adaptive off-policy；复用 student-generated outputs，降低纯 on-policy 成本</td>
+            <td>teacher logits / distribution</td>
+            <td>token-level distribution</td>
+            <td>skew KL + adaptive off-policy</td>
+            <td>token-local</td>
+            <td>通过 adaptive off-policy 选择/复用样本，而非复杂 token routing</td>
+            <td>skew-KL 目标和 off-policy 复用降低成本</td>
+            <td>instruction-following；重点评估性能和速度，不是典型 OPD failure split <a class="source-link" href="https://arxiv.org/abs/2402.03898">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">Revisiting OPD: Empirical Failure Modes and Simple Fixes</span><span class="method-tag">top-K local support</span></td>
+            <td>student rollouts；top-p rollout sampling</td>
+            <td>teacher logits / logprobs on student prefixes</td>
+            <td>对比 sampled-token OPD；提出 teacher top-K local support matching / truncated reverse KL，并做 special-token masking</td>
+            <td>从 sampled-token reverse-KL 走向 top-K truncated reverse-KL local matching</td>
+            <td>主要是 immediate token；论文分析 token-level 相对 sequence-level RKL 的 bias-variance tradeoff</td>
+            <td>top-K support routing；special-token mask；缓解 one-token signal 失衡</td>
+            <td>top-p sampling、special-token masking、support truncation</td>
+            <td>toy study、math reasoning、multi-task agentic+math；拆 failure modes：one-token imbalance、teacher prefix unreliability、tokenizer/special-token mismatch <a class="source-link" href="https://arxiv.org/abs/2603.25562">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">Rethinking OPD: Phenomenology, Mechanism, and Recipe</span><span class="method-tag">mechanism analysis</span></td>
+            <td>student-visited reasoning states</td>
+            <td>teacher logits / high-probability token behavior</td>
+            <td>关注 shared high-probability token set / overlap support</td>
+            <td>主要分析 reverse-KL OPD 的机制和失败条件</td>
+            <td>token-local 机制分析；提出 long-horizon scaling 问题</td>
+            <td>teacher-student thinking-pattern compatibility；teacher-aligned prompt selection；off-policy cold start</td>
+            <td>off-policy cold start + prompt selection 作为 recipe</td>
+            <td>成功/失败 run 对比；看 overlap ratio、overlap-token advantage、entropy gap、teacher capability novelty <a class="source-link" href="https://arxiv.org/abs/2604.13016">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">TIP: Token Importance in OPD</span><span class="method-tag">token selection</span></td>
+            <td>student rollouts</td>
+            <td>teacher-student divergence + student entropy</td>
+            <td>原 OPD support 上做 token selection；不是主要改 vocab support</td>
+            <td>原 OPD loss 外加 token importance selection</td>
+            <td>token-local；不改 return 形式</td>
+            <td>用 student entropy 和 teacher-student divergence 选 token：高熵 token、低熵但高分歧 token</td>
+            <td>通过少训 token 降低显存和噪声</td>
+            <td>按 token 类型拆：high entropy / low entropy high divergence；MATH-500、AIME、DeepPlanning；报告 memory reduction <a class="source-link" href="https://arxiv.org/abs/2604.14084">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">vOPD / KL for a KL</span><span class="method-tag">control variate</span></td>
+            <td>student rollouts</td>
+            <td>teacher-student log-ratio；额外构造 closed-form baseline</td>
+            <td>sampled-token action；baseline 可用 full-vocab 或 top-k approximation</td>
+            <td>PG-style sampled-token reverse-KL + control variate baseline</td>
+            <td>immediate-token advantage 减去 detached state-only baseline；目标是降 variance 且保持期望梯度</td>
+            <td>无显式替代 token routing；主要改 estimator baseline</td>
+            <td>control-variate baseline，本质是 variance regularization</td>
+            <td>math / science reasoning；比较 vanilla OPD、full-vocab baseline、top-k baseline approximation <a class="source-link" href="https://arxiv.org/abs/2605.07865">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">OPD+</span><span class="method-tag">f-divergence</span></td>
+            <td>student-generated rollouts</td>
+            <td>divergence-derived reward / teacher feedback</td>
+            <td>取决于具体 f-divergence 实例</td>
+            <td>泛化到 f-divergence；修正 stop-gradient advantage 设计</td>
+            <td>重点是 advantage / reward gradient 是否 stop-gradient；修正 biased estimator</td>
+            <td>不主要做 vocab routing；主要改 advantage 构造</td>
+            <td>正确处理 reward 梯度，减少由 stop-gradient 带来的偏差</td>
+            <td>math reasoning、tool-use；比较 KL baseline 和不同 f-divergence 设计 <a class="source-link" href="https://arxiv.org/abs/2606.01039">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">AOPD: Asymmetric OPD</span><span class="method-tag">advantage sign gate</span></td>
+            <td>student trajectories</td>
+            <td>teacher token-level feedback / advantage</td>
+            <td>positive advantage 用 sampled-token；non-positive advantage 用 localized teacher distribution support</td>
+            <td>sign-conditioned switch：正 advantage 保留 PG；非正 advantage 改用 local divergence matching</td>
+            <td>token-level advantage</td>
+            <td>advantage sign gate：正区间 exploitation，非正区间 imitation / localized matching</td>
+            <td>保持更高 policy entropy；减少负反馈无目标问题</td>
+            <td>math reasoning；strong / weak initialization；policy entropy；sequential tool-use retention <a class="source-link" href="https://arxiv.org/abs/2605.06387">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">EOPD: Entropy-Aware OPD</span><span class="method-tag">entropy gate</span></td>
+            <td>student-generated sequences</td>
+            <td>teacher token-level probability distribution + teacher entropy</td>
+            <td>根据 teacher entropy 选择局部目标</td>
+            <td>低熵位置偏 reverse KL；高熵 teacher token 选择 forward KL，以保留不确定性</td>
+            <td>token-local</td>
+            <td>teacher entropy gate：高熵位置不再强行 mode-seeking</td>
+            <td>entropy-aware objective；缓解 diversity collapse</td>
+            <td>AIME24/25 和数学推理；拆 high-entropy token，比较 teacher/student entropy distribution <a class="source-link" href="https://openreview.net/pdf?id=WSRQ37tzk1">OpenReview</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">SCOPE</span><span class="method-tag">correctness gate</span></td>
+            <td>on-policy rollouts</td>
+            <td>teacher KL feedback + correctness signal + teacher/student perplexity</td>
+            <td>KL distillation support；correct/incorrect trajectory 分流</td>
+            <td>dual-path adaptive weighting：错误轨迹做 teacher-PPL-weighted KL；正确轨迹做 student-PPL-weighted MLE</td>
+            <td>主要 trajectory-level correctness + token-level KL</td>
+            <td>correctness gate：错误轨迹走 teacher correction，正确轨迹走 confidence-boundary reinforcement</td>
+            <td>group-level normalization；teacher/student perplexity weighting</td>
+            <td>correct vs incorrect trajectory split；六个 reasoning benchmarks；Avg@32 / Pass@32 <a class="source-link" href="https://arxiv.org/abs/2604.10688">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">Stable-OPD / Demystifying OPD</span><span class="method-tag">rollout stabilization</span></td>
+            <td>student-induced rollouts；加入 rollout mixture</td>
+            <td>teacher distillation feedback</td>
+            <td>原 OPD support；重点不是扩 support，而是稳定 rollout 分布</td>
+            <td>标准 OPD + stabilization</td>
+            <td>token-local；未主攻 temporal credit</td>
+            <td>通过 rollout mixture 缓解 student-induced data 的偏移</td>
+            <td>reference-based divergence constraint + rollout mixture distillation；解决 length inflation / repetition</td>
+            <td>math reasoning；重点看 length inflation、repetition、truncation collapse 和平均性能 <a class="source-link" href="https://arxiv.org/html/2604.08527v1">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">TGPO: Teacher-Guided Policy Optimization</span><span class="method-tag">teacher-guided repair</span></td>
+            <td>student / RL-driven exploration trajectories，尤其 large teacher-student divergence 场景</td>
+            <td>teacher-guided feedback；当 raw RKL 负反馈不 informative 时引入 teacher-guided repair</td>
+            <td>不只依赖 sampled token；用 teacher guidance 提供更明确修复方向</td>
+            <td>改造 RKL-based OPD route；避免大分布差距下全是负反馈</td>
+            <td>token/trajectory 级别，具体 credit 依实现</td>
+            <td>teacher-guided route：当 student trajectory 落在 teacher distribution 外时，不只惩罚 sampled token，而是给更可学的 teacher guidance</td>
+            <td>未明确；主要稳定性来自 route change</td>
+            <td>reasoning distillation + RLVR setting；重点是 large policy divergence 下的有效性 <a class="source-link" href="https://openreview.net/forum?id=Pa8SB72nt1">OpenReview</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">OPRD: On-Policy Representation Distillation</span><span class="method-tag">representation support</span></td>
+            <td>student rollouts</td>
+            <td>teacher hidden states / representations，而非只看输出 logits</td>
+            <td>hidden-state support / representation support</td>
+            <td>representation alignment；绕开大词表 LM-head KL</td>
+            <td>token/position-level representation alignment；不是 log-ratio return</td>
+            <td>不做传统 vocab routing；把 routing 问题转到 layer/representation selection</td>
+            <td>降低 output-space sampling variance 和显存/速度成本</td>
+            <td>AIME 2024/2025、AIMO；报告比 top-k OPD 更快、更省显存 <a class="source-link" href="https://arxiv.org/abs/2606.06021">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">MiMo-V2-Flash / Multi-Teacher OPD 系统报告</span><span class="method-tag">multi-teacher</span></td>
+            <td>student on-policy sequences</td>
+            <td>domain-specialized teachers 的 dense token-level rewards + outcome reward / GRPO-style advantages</td>
+            <td>多 teacher support；具体 support 依系统</td>
+            <td>multi-teacher OPD + outcome / GRPO-style advantage hybrid</td>
+            <td>token dense reward + outcome-level advantage 混合</td>
+            <td>domain-conditioned teacher selection；outcome alignment</td>
+            <td>多 teacher / outcome reward 混合本身是稳定机制</td>
+            <td>按 domain / task family 看效果；public report 层面，细节有限 <a class="source-link" href="https://arxiv.org/html/2606.22793v1">arXiv</a></td>
+          </tr>
+          <tr>
+            <td><span class="paper">DeepSeek-V4 / multi-teacher OPD 系统报告</span><span class="method-tag">full-vocab multi-teacher</span></td>
+            <td>student trajectories in post-training</td>
+            <td>10+ domain teachers</td>
+            <td>full-vocabulary logits</td>
+            <td>reverse-KL multi-teacher OPD</td>
+            <td>主要 token-level full-vocab distillation；是否有复杂 credit 未公开细化</td>
+            <td>teacher scheduling / expert consolidation</td>
+            <td>full-vocab support fidelity + systems optimization</td>
+            <td>expert consolidation / domain teacher 合并；survey 将其作为 support fidelity 和 teacher scheduling 的系统证据 <a class="source-link" href="https://arxiv.org/html/2606.22793v1">arXiv</a></td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <h2>变量小结</h2>
+    <section class="table-shell summary" aria-label="OPD variable summary">
+      <table>
+        <thead>
+          <tr>
+            <th>变量</th>
+            <th>典型方法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>state source</td>
+            <td>GKD 把训练状态移到 student 自生成序列；DistiLLM 用 adaptive off-policy 降低纯 on-policy 成本；Stable-OPD 用 rollout mixture 稳定状态分布</td>
+          </tr>
+          <tr>
+            <td>teacher / feedback source</td>
+            <td>GKD/MiniLLM/Revisiting 用 white-box teacher logits；SCOPE 加 correctness / perplexity；MiMo / DeepSeek-V4 用多 teacher；OPRD 用 hidden states</td>
+          </tr>
+          <tr>
+            <td>support</td>
+            <td>sampled-token 最便宜但信号弱；Revisiting 用 teacher top-K；DeepSeek-V4 用 full-vocab；OPRD 转到 representation support</td>
+          </tr>
+          <tr>
+            <td>KL / update route</td>
+            <td>GKD 是 direct KL/JSD；MiniLLM/vOPD 是 PG-style reverse KL；AOPD 是 sign-conditioned hybrid；EOPD 是 entropy-conditioned KL switch</td>
+          </tr>
+          <tr>
+            <td>temporal credit</td>
+            <td>大多数 OPD 仍是 token-local；vOPD 改 baseline；OPD+ 改 advantage 设计；survey 提出的 GAE-OPD 是未来方向</td>
+          </tr>
+          <tr>
+            <td>routing / gating</td>
+            <td>TIP 按 entropy/divergence 选 token；SCOPE 按 correct/incorrect rollout 分流；AOPD 按 advantage sign 切换；EOPD 按 teacher entropy 切 KL</td>
+          </tr>
+          <tr>
+            <td>regularizer</td>
+            <td>Stable-OPD 的 reference constraint；vOPD 的 control variate；Revisiting 的 top-k + masking；SCOPE 的 group normalization</td>
+          </tr>
+          <tr>
+            <td>evaluation split</td>
+            <td>最好的 OPD 论文已经不只看平均分，而是拆 correct/incorrect、entropy、top-k overlap、prefix/suffix、length/repetition、teacher-student compatibility 等</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <footer>
+      <span class="weak">整理说明：</span>表格保留原对话中的变量名与方法归类，并把引用胶囊改为可点击来源链接。
+    </footer>
+  </main>
+</body>
+</html>
