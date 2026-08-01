@@ -1,0 +1,1053 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Code-Mixed / Code-Switched 机器翻译研究综述：按数据、评测、训练三条主线梳理 2018–2026 年论文，并给出重点阅读路径与实验建议。">
+  <title>Code-Mixed Translation 研究时间线：数据、评测与训练</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f7f8fb;
+      --panel: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --line: #d9dee8;
+      --head: #172033;
+      --head2: #eef3ff;
+      --accent: #225c8d;
+      --accent-soft: #edf6fc;
+      --data: #176b55;
+      --data-bg: #eaf7f1;
+      --eval: #8b4a17;
+      --eval-bg: #fff3e6;
+      --train: #6e3fa0;
+      --train-bg: #f5edff;
+      --llm: #9d3f45;
+      --llm-bg: #fff0f1;
+      --key: #b7791f;
+      --key-bg: #fff8db;
+      --preprint: #7b8798;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(34, 92, 141, 0.3);
+    }
+
+    a:hover { border-bottom-color: currentColor; }
+
+    main {
+      width: min(1880px, calc(100vw - 40px));
+      margin: 28px auto 52px;
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    header {
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: linear-gradient(135deg, #ffffff 0%, #f3f7ff 100%);
+      box-shadow: 0 12px 30px rgba(17, 24, 39, 0.06);
+    }
+
+    h1, h2, h3 {
+      color: var(--head);
+      letter-spacing: 0;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(26px, 3vw, 38px);
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin: 34px 0 12px;
+      font-size: 22px;
+      line-height: 1.3;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+    }
+
+    .subtitle {
+      max-width: 1180px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .subtitle + .subtitle { margin-top: 7px; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(150px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+      max-width: 880px;
+    }
+
+    .stat {
+      padding: 13px 15px;
+      border: 1px solid #dbe4ef;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .stat strong {
+      display: block;
+      color: var(--head);
+      font-size: 21px;
+      line-height: 1.2;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .scope-grid,
+    .reading-grid,
+    .trend-grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .scope-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .reading-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .trend-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    .card {
+      padding: 16px 17px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--panel);
+      box-shadow: 0 8px 20px rgba(17, 24, 39, 0.04);
+    }
+
+    .card p,
+    .card ul {
+      margin: 0;
+      color: #435064;
+      font-size: 13px;
+    }
+
+    .card ul { padding-left: 18px; }
+    .card li + li { margin-top: 5px; }
+
+    .read-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      margin-bottom: 9px;
+      border-radius: 50%;
+      background: var(--head);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .legend,
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .legend { margin: 12px 0; }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      margin: 2px 4px 2px 0;
+      padding: 2px 8px;
+      border: 1px solid transparent;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tag-data { color: var(--data); background: var(--data-bg); border-color: #bee4d5; }
+    .tag-eval { color: var(--eval); background: var(--eval-bg); border-color: #edd2b6; }
+    .tag-train { color: var(--train); background: var(--train-bg); border-color: #dac6ef; }
+    .tag-llm { color: var(--llm); background: var(--llm-bg); border-color: #efc9cd; }
+    .tag-key { color: var(--key); background: var(--key-bg); border-color: #ead788; }
+    .tag-direct { color: #28576f; background: #edf6fb; border-color: #c5dce8; }
+    .tag-adjacent { color: #5e6878; background: #f1f3f6; border-color: #d7dce3; }
+    .tag-preprint { color: #616b78; background: #f4f5f7; border-color: #d7dce3; }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 12px 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: rgba(247, 248, 251, 0.96);
+      backdrop-filter: blur(8px);
+    }
+
+    .search {
+      flex: 1 1 330px;
+      min-width: 240px;
+      padding: 9px 11px;
+      border: 1px solid #cdd5df;
+      border-radius: 7px;
+      background: #fff;
+      color: var(--text);
+      font: inherit;
+      font-size: 13px;
+    }
+
+    button.filter {
+      padding: 8px 11px;
+      border: 1px solid #cdd5df;
+      border-radius: 7px;
+      background: #fff;
+      color: #344054;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    button.filter[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .result-count {
+      align-self: center;
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .table-shell {
+      overflow: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+      max-height: calc(100vh - 155px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      table-layout: fixed;
+      font-size: 12.5px;
+    }
+
+    .survey-table { min-width: 2500px; }
+    .compact-table { min-width: 1050px; }
+
+    th,
+    td {
+      padding: 10px 11px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+      background: var(--panel);
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: var(--head2);
+      color: #1b2a44;
+      font-weight: 750;
+      text-align: left;
+    }
+
+    .survey-table th:nth-child(1),
+    .survey-table td:nth-child(1) {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      width: 95px;
+      box-shadow: 1px 0 0 var(--line);
+    }
+
+    .survey-table th:nth-child(2),
+    .survey-table td:nth-child(2) {
+      position: sticky;
+      left: 95px;
+      z-index: 1;
+      width: 310px;
+      box-shadow: 1px 0 0 var(--line);
+    }
+
+    .survey-table th:nth-child(1),
+    .survey-table th:nth-child(2) { z-index: 4; }
+
+    tr:nth-child(even) td { background: #fbfcff; }
+    tr:nth-child(even) td:nth-child(1),
+    tr:nth-child(even) td:nth-child(2) { background: #fbfcff; }
+
+    tr.key-row td { background-image: linear-gradient(90deg, rgba(255, 248, 219, 0.48), rgba(255, 255, 255, 0)); }
+    tr.key-row:nth-child(even) td { background-color: #fbfcff; }
+
+    .paper {
+      display: block;
+      color: var(--head);
+      font-weight: 780;
+      line-height: 1.35;
+    }
+
+    .authors,
+    .note {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 11.5px;
+    }
+
+    .source-link {
+      display: inline-block;
+      margin-top: 7px;
+      font-size: 11.5px;
+      font-weight: 700;
+    }
+
+    .source-link::before {
+      content: "论文：";
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .direction {
+      color: #27364b;
+      font-weight: 700;
+    }
+
+    .caveat {
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-left: 4px solid #9aa7b8;
+      border-radius: 4px;
+      background: #f1f4f8;
+      color: #465368;
+      font-size: 13px;
+    }
+
+    .recommendation {
+      padding: 16px 18px;
+      border: 1px solid #cbd8e8;
+      border-radius: 9px;
+      background: #f3f7fc;
+    }
+
+    .recommendation p,
+    .recommendation ol {
+      margin: 0;
+      font-size: 13px;
+    }
+
+    .recommendation ol { padding-left: 20px; }
+    .recommendation li + li { margin-top: 7px; }
+
+    footer {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 12.5px;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 1100px) {
+      .reading-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .scope-grid, .trend-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, minmax(130px, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      main { width: min(100% - 20px, 1880px); margin-top: 12px; }
+      header { padding: 18px; }
+      .reading-grid { grid-template-columns: 1fr; }
+      .toolbar { position: static; }
+      .result-count { width: 100%; margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <nav aria-label="页面导航">
+      <a href="./index.html">← MT-oriented Pretraining 总表</a>
+      <a href="#timeline">论文时间线</a>
+      <a href="#reading">重点阅读</a>
+      <a href="#trends">三条主线</a>
+      <a href="#protocol">实验建议</a>
+    </nav>
+
+    <header>
+      <h1>Code-Mixed Translation 研究时间线</h1>
+      <p class="subtitle">从 <strong>数据、评测、训练</strong> 三个角度，按时间顺序整理 2018–2026 年 Code-Mixed / Code-Switched 机器翻译及 LLM 相关工作。重点聚焦“混杂输入 → 单语输出”和“单语输入 → 混杂输出”，同时收录对数据合成、跨语迁移与输出语言控制有直接启发的相邻工作。</p>
+      <p class="subtitle">更新至 2026-08-01。表中结果只复述论文公开结论；“研究启示”属于归纳，不等同于跨论文可直接比较的实验结果。</p>
+      <div class="stats" aria-label="综述统计">
+        <div class="stat"><strong>35</strong><span>论文 / 基准条目</span></div>
+        <div class="stat"><strong>2018–2026</strong><span>时间范围</span></div>
+        <div class="stat"><strong>3</strong><span>数据 · 评测 · 训练主线</span></div>
+        <div class="stat"><strong>13</strong><span>优先阅读论文</span></div>
+      </div>
+    </header>
+
+    <section aria-labelledby="scope-title">
+      <h2 id="scope-title">先统一范围</h2>
+      <div class="scope-grid">
+        <article class="card">
+          <h3>直接任务</h3>
+          <p>输入或输出明确包含两种及以上语言：例如 Hinglish→English、English→Hinglish、Vietnamese-English→English。表中标为“直接”。</p>
+        </article>
+        <article class="card">
+          <h3>相邻工作</h3>
+          <p>原任务未必是 Code-Mixed MT，但其 benchmark、合成策略、继续预训练或输出语言对齐可迁移到该任务。表中标为“相邻”，避免误当作直接翻译结果。</p>
+        </article>
+        <article class="card">
+          <h3>方向不能混为一谈</h3>
+          <p><span class="direction">Code-Mixed→单语</span>考察语义恢复与残留控制；<span class="direction">单语→Code-Mixed</span>考察切换自然度与风格。两者的数据、指标和训练信号不同。</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="reading" aria-labelledby="reading-title">
+      <h2 id="reading-title">13 篇重点阅读：一条最短路径</h2>
+      <div class="reading-grid">
+        <article class="card"><span class="read-index">1</span><h3>Dhar et al. (2018)</h3><p>任务起点：6,088 条人工 Hinglish→English 平行语料与可插拔预处理增强。</p></article>
+        <article class="card"><span class="read-index">2</span><h3>Gupta et al. (2021)</h3><p>数据合成主线：用少量真实混杂语料学习切换位置，把普通平行语料改造成混杂平行语料。</p></article>
+        <article class="card"><span class="read-index">3</span><h3>Tarunesh et al. (2021)</h3><p>生成主线：把单语→混杂视为翻译，通过合成预训练与课程学习逼近真实切换分布。</p></article>
+        <article class="card"><span class="read-index">4</span><h3>MixMT (2022)</h3><p>统一任务定义：同时评测 monolingual→code-mixed 与 code-mixed→monolingual。</p></article>
+        <article class="card"><span class="read-index">5</span><h3>Vavre et al. (2022)</h3><p>B2BT：先从真实混杂目标学习生成器，再反向扩增最终翻译训练数据。</p></article>
+        <article class="card"><span class="read-index">6</span><h3>Nguyen et al. (2023)</h3><p>评测警告：自动指标不足以覆盖混杂输入下的语义忠实性，必须结合人工分析。</p></article>
+        <article class="card"><span class="read-index">7</span><h3>Huzaifah et al. (2024)</h3><p>LLM 主基线：6 个 LLM、7 个数据集，系统比较 zero/few-shot、pivot 与传统 MT。</p></article>
+        <article class="card"><span class="read-index">8</span><h3>Kartik et al. (2024)</h3><p>规模与鲁棒性：HINMIX 约 420 万对，RCMT 联合学习真实噪声与合成数据。</p></article>
+        <article class="card"><span class="read-index">9</span><h3>CHAI (2024/2025)</h3><p>偏好优化：LLM 标注偏好 + RLAIF；注意主方向是 English→Hinglish，而非混杂→单语。</p></article>
+        <article class="card"><span class="read-index">10</span><h3>AfroCS-xs (2025)</h3><p>质量优先：小规模、母语者校验数据仍可显著改善非洲低资源语言翻译。</p></article>
+        <article class="card"><span class="read-index">11</span><h3>CodeMixBench (2025)</h3><p>宽覆盖评测：18 种语言、7 个语系、8 类任务，揭示跨语系混杂更难。</p></article>
+        <article class="card"><span class="read-index">12</span><h3>VietMix (2026)</h3><p>自然数据闭环：专家平行语料 + 迭代微调 + 定向过滤，优于强回译基线。</p></article>
+        <article class="card"><span class="read-index">13</span><h3>OLA (2026)</h3><p>输出语言对齐：约 1K 条 Code-Switching Aware DPO 数据即可显著减少语言选错与中途串语。</p></article>
+      </div>
+    </section>
+
+    <section id="timeline" aria-labelledby="timeline-title">
+      <h2 id="timeline-title">论文大表：按时间排序</h2>
+      <p class="subtitle">可按主线、是否重点、直接/相邻、是否 LLM 工作筛选。搜索支持论文名、语言对、模型、数据集和结论关键词。</p>
+      <div class="legend" aria-label="标签说明">
+        <span class="tag tag-data">数据</span>
+        <span class="tag tag-eval">评测</span>
+        <span class="tag tag-train">训练</span>
+        <span class="tag tag-llm">LLM</span>
+        <span class="tag tag-key">★ 重点</span>
+        <span class="tag tag-direct">直接任务</span>
+        <span class="tag tag-adjacent">相邻工作</span>
+        <span class="tag tag-preprint">预印本</span>
+      </div>
+
+      <div class="toolbar" aria-label="论文筛选工具">
+        <input id="paper-search" class="search" type="search" placeholder="搜索：Hinglish、RLAIF、BLEU、synthetic、output language…" aria-label="搜索论文">
+        <div class="filters" role="group" aria-label="类别筛选">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">全部</button>
+          <button class="filter" type="button" data-filter="data" aria-pressed="false">数据</button>
+          <button class="filter" type="button" data-filter="eval" aria-pressed="false">评测</button>
+          <button class="filter" type="button" data-filter="train" aria-pressed="false">训练</button>
+          <button class="filter" type="button" data-filter="llm" aria-pressed="false">LLM</button>
+          <button class="filter" type="button" data-filter="key" aria-pressed="false">只看重点</button>
+          <button class="filter" type="button" data-filter="direct" aria-pressed="false">只看直接任务</button>
+        </div>
+        <span id="result-count" class="result-count" aria-live="polite">显示 35 / 35</span>
+      </div>
+
+      <div class="table-shell" aria-label="Code-Mixed Translation 论文时间线">
+        <table class="survey-table">
+          <colgroup>
+            <col style="width:95px">
+            <col style="width:310px">
+            <col style="width:155px">
+            <col style="width:280px">
+            <col style="width:330px">
+            <col style="width:350px">
+            <col style="width:320px">
+            <col style="width:360px">
+            <col style="width:180px">
+          </colgroup>
+          <thead>
+            <tr>
+              <th>时间</th>
+              <th>论文 / 发布状态</th>
+              <th>主轴与范围</th>
+              <th>任务 / 语言</th>
+              <th>数据与构造</th>
+              <th>模型 / 训练方法</th>
+              <th>评测设计</th>
+              <th>核心结论与研究启示</th>
+              <th>证据边界</th>
+            </tr>
+          </thead>
+          <tbody id="paper-rows">
+            <tr class="paper-row key-row" data-tags="data train key direct" data-scope="direct">
+              <td>2018-08</td>
+              <td><span class="paper">Enabling Code-Mixed Translation: Parallel Corpus Creation and MT Augmentation Approach</span><span class="authors">Dhar, Kumar &amp; Shrivastava · Workshop paper</span><a class="source-link" href="https://aclanthology.org/W18-3817/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">English-Hindi code-mixed → English</span>；社交媒体文本。</td>
+              <td>从已有 Hinglish 数据出发，由 4 名双语译者翻译 6,088 句，形成早期人工平行语料。</td>
+              <td>语言识别、翻译、合并式预处理管线；可接 Moses、神经 MT、Google/Bing 等现有系统。</td>
+              <td>比较原始系统与加增强管线后的翻译；以传统 MT 指标和结构分析为主。</td>
+              <td>奠定“先规范化/分语言，再复用成熟 MT”的经典路线，也暴露了人工平行数据稀缺这个核心瓶颈。</td>
+              <td>直接 CMT；同行评审。6,088 为论文明确报告。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data train adjacent" data-scope="adjacent">
+              <td>2019-06</td>
+              <td><span class="paper">Code-Switching for Enhancing NMT with Pre-Specified Translation</span><span class="authors">Song et al. · NAACL 2019</span><a class="source-link" href="https://aclanthology.org/N19-1044/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>普通 NMT + 用户指定术语；源端被替换成目标语言短语，形成受控 code-switch。</td>
+              <td>用目标译文替换源句中的指定短语，自动构造 code-switched 训练样本。</td>
+              <td>标准 NMT 学习直接复制源端目标词，不改模型结构和解码算法。</td>
+              <td>重点看指定词翻译准确度与普通词是否受损。</td>
+              <td>不是自然 Code-Mixed MT，但对“专业术语应保留英文”的训练设计非常有用：残留不应一概判错。</td>
+              <td>相邻工作；任务目标是约束翻译，而非自然混杂文本。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval adjacent" data-scope="adjacent">
+              <td>2020-05</td>
+              <td><span class="paper">LinCE: A Centralized Benchmark for Linguistic Code-switching Evaluation</span><span class="authors">Aguilar, Kar &amp; Solorio · LREC 2020</span><a class="source-link" href="https://aclanthology.org/2020.lrec-1.223/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>Spanish-English、Nepali-English、Hindi-English、MSA-Egyptian Arabic；4 个理解任务。</td>
+              <td>集中 11 个语料库，统一切分与提交平台。</td>
+              <td>LSTM、ELMo、mBERT 等基线。</td>
+              <td>原始版本覆盖 LID、NER、POS、情感分析。</td>
+              <td>建立跨语对、跨任务的标准化意识。后续工作引用 LinCE 的 MT 资源/榜单时，要与 2020 原始四任务版本区分。</td>
+              <td>相邻 benchmark；原始论文不含 MT，不能把四任务结果写成翻译结果。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval train adjacent" data-scope="adjacent">
+              <td>2020-07</td>
+              <td><span class="paper">GLUECoS: An Evaluation Benchmark for Code-Switched NLP</span><span class="authors">Khanuja et al. · ACL 2020</span><a class="source-link" href="https://aclanthology.org/2020.acl-main.329/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>English-Hindi 与 English-Spanish；LID、POS、NER、情感、QA、NLI。</td>
+              <td>多任务统一 benchmark，并构造人工合成 code-switched 数据用于微调。</td>
+              <td>跨语词向量与多语预训练模型；比较有/无混杂数据微调。</td>
+              <td>按任务分别使用分类、序列标注、QA 指标。</td>
+              <td>“模型会多语”不等于“适应混杂”；显式混杂数据微调通常更好。这一结论后来在 MT/LLM 研究中反复出现。</td>
+              <td>相邻 benchmark；原始任务不含 MT。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data train key direct" data-scope="direct">
+              <td>2021-06</td>
+              <td><span class="paper">Training Data Augmentation for Code-Mixed Translation</span><span class="authors">Gupta, Vavre &amp; Sarawagi · NAACL 2021</span><a class="source-link" href="https://aclanthology.org/2021.naacl-main.459/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">Hindi-English code-mixed → English</span>。</td>
+              <td>用少量真实混杂语料训练 mBERT 三分类序列标注器，再把普通非混杂平行语料转换为混杂源端；还扩展到回译。</td>
+              <td>合成数据与真实数据共同训练翻译模型；学习“保留/翻译成英语/翻译成印地语”式 token 决策。</td>
+              <td>BLEU；总体 43.9→46.4，重度混杂子集提升 5.8 BLEU，另含对抗测试。</td>
+              <td>切换位置最好从真实语料中学习，而不是完全随机替换；同时应按混杂强度分层报告结果。</td>
+              <td>直接 CMT；同行评审。数值来自论文。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data train direct" data-scope="direct">
+              <td>2021-06</td>
+              <td><span class="paper">Exploring Text-to-Text Transformers for English to Hinglish MT with Synthetic Code-Mixing</span><span class="authors">Jawahar et al. · CALCS 2021</span><a class="source-link" href="https://aclanthology.org/2021.calcs-1.6/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">English → Hinglish</span>。</td>
+              <td>用双语分布表示生成无依存分析器的合成混杂数据。</td>
+              <td>mT5 / mBART；先合成数据、后 gold 数据的 curriculum fine-tuning。</td>
+              <td>BLEU；最佳 mT5 报告 12.67 BLEU，并在共享任务中排名第一。</td>
+              <td>简单合成 + 合理课程可胜过更复杂的回译或语言学约束基线；但低 BLEU 也说明生成方向仍难。</td>
+              <td>直接生成方向；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval train key direct" data-scope="direct">
+              <td>2021-08</td>
+              <td><span class="paper">From Machine Translation to Code-Switching: Generating High-Quality Code-Switched Text</span><span class="authors">Tarunesh, Kumar &amp; Jyothi · ACL-IJCNLP 2021</span><a class="source-link" href="https://aclanthology.org/2021.acl-long.245/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">Hindi → Hindi-English code-switched</span>；matrix language 为 Hindi。</td>
+              <td>新建含单语 Hindi 译文的真实混杂语料，并收集/人工核验 crowdsourced 变体；结合大量单语与平行语料。</td>
+              <td>TCS：把生成当作翻译；合成 CS 预训练、监督/无监督目标与精心设计的课程。</td>
+              <td>人工自然度、自动混杂指标、语言模型 perplexity、下游 NLI。</td>
+              <td>生成数据是否有用，不能只看表面自然度；应同时看分布指标、人工偏好与下游收益。</td>
+              <td>直接生成方向；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="eval train direct" data-scope="direct">
+              <td>2021-09</td>
+              <td><span class="paper">Hinglish to English Machine Translation using Multilingual Transformers</span><span class="authors">Agarwal, Rao &amp; Jayagopi · RANLP SRW 2021</span><a class="source-link" href="https://aclanthology.org/2021.ranlp-srw.3/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">Hinglish → English</span>；PHINC 数据集。</td>
+              <td>使用现有 PHINC 平行语料。</td>
+              <td>微调 mBART 与 mT5。</td>
+              <td>BLEU；论文报告相对既有 15.3 基线达到 29.5。</td>
+              <td>多语 seq2seq 预训练可显著抬高低资源 CMT 基线，但需警惕不同切分/预处理导致的不可比性。</td>
+              <td>直接 CMT；学生研究论文。数值为同文设置内比较。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval key direct" data-scope="direct">
+              <td>2022-12</td>
+              <td><span class="paper">Overview and Results of MixMT Shared-Task at WMT 2022</span><span class="authors">Srivastava &amp; Singh · WMT 2022</span><a class="source-link" href="https://aclanthology.org/2022.wmt-1.74/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td>Subtask 1：<span class="direction">monolingual → code-mixed</span>；Subtask 2：<span class="direction">code-mixed → monolingual</span>。</td>
+              <td>提供共享训练/开发/测试数据与人评阶段；38 个团队注册，7 个团队完成活跃提交。</td>
+              <td>参赛系统覆盖预训练 seq2seq、合成数据、课程、领域调度与多向微调。</td>
+              <td>自动指标 + human evaluation；两方向分开排名。</td>
+              <td>第一次把双方向放在共同任务中，适合作为实验协议模板；两方向不可用单一指标或同一结论替代。</td>
+              <td>直接共享任务；同行评审概览。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data train key direct" data-scope="direct">
+              <td>2022-12</td>
+              <td><span class="paper">Adapting Multilingual Models for Code-Mixed Translation</span><span class="authors">Vavre, Gupta &amp; Sarawagi · Findings EMNLP 2022</span><a class="source-link" href="https://aclanthology.org/2022.findings-emnlp.528/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">Hi/Mr/Bn/Es mixed → English</span>。</td>
+              <td>B2BT：真实混杂 C 先生成伪 English；训练 English→C 生成器；再把大量真实 English 转成合成 C，得到最终 C→English 平行数据。</td>
+              <td>多语翻译模型 + 两阶段 back-to-back translation；源端随机 mask 缓解英语复制偏置。</td>
+              <td>BLEU；Hi/Mr/Bn 相比既有工作最高 +3.8；LinCE Es→En 相比既有榜首 +6.5、相比作者强基线 +1.1。</td>
+              <td>关键不是“再做一次回译”，而是让生成器以真实混杂文本为目标端，从而学习自然切换分布。</td>
+              <td>直接 CMT；同行评审。不同语言的增益不能相互替代。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="train direct" data-scope="direct">
+              <td>2022-12</td>
+              <td><span class="paper">Domain Curricula for Code-Switched MT at MixMT 2022</span><span class="authors">Downey et al. · WMT 2022 system paper</span><a class="source-link" href="https://aclanthology.org/2022.wmt-1.117/">ACL Anthology</a></td>
+              <td><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
+              <td>MixMT 双方向；社交媒体域与外域数据。</td>
+              <td>组合多个领域与对齐数据。</td>
+              <td>预训练/微调、句子对齐目标与 domain curriculum；连续训练时策略性投放各域数据。</td>
+              <td>共享任务指标；分析域切换带来的遗忘与性能转移。</td>
+              <td>训练顺序本身是变量：简单顺序微调会牺牲后续域，连续混合的课程更稳定。</td>
+              <td>直接 CMT 系统论文；结论限于其共享任务设置。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="eval key direct" data-scope="direct">
+              <td>2023-07</td>
+              <td><span class="paper">How effective is machine translation on low-resource code-switching?</span><span class="authors">Nguyen et al. · Findings ACL 2023</span><a class="source-link" href="https://aclanthology.org/2023.findings-acl.893/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td>Vietnamese 与 Vietnamese-English mixed 输入 → English。</td>
+              <td>构造可对照的纯越南语与越英混杂输入。</td>
+              <td>Google MT、mBART-50、M2M-100-big，重点是分析而非新训练算法。</td>
+              <td>自动指标 + 人工语义忠实性评价。</td>
+              <td>混杂输入有时反而提高自动分与人评忠实性；自动评测单独使用仍不足。说明“混杂比例越高越差”并非普遍规律。</td>
+              <td>直接 CMT；同行评审。结论来自越英个案，需跨语对复验。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="eval train adjacent" data-scope="adjacent">
+              <td>2023-07</td>
+              <td><span class="paper">CoMix: Guide Transformers to Code-Mix using POS Structure and Phonetics</span><span class="authors">Gautam et al. · Findings ACL 2023</span><a class="source-link" href="https://aclanthology.org/2023.findings-acl.506/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>Code-mixed 表示学习与生成；不是专门的 CMT 系统。</td>
+              <td>POS 约束的弱监督生成与语音/音系信号。</td>
+              <td>修改注意力与预训练方式，将 phonetic signal 注入 Transformer。</td>
+              <td>提出 phonetic-aware 指标家族；报告其 BLEU 变体与人评相关性更好。</td>
+              <td>罗马化与音译是 CMT 的独立误差源；只用字面 n-gram 会低估“声音相近但拼写不同”的输出。</td>
+              <td>相邻工作；指标启发可迁移，不能当作 CMT 主结果。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="eval llm direct" data-scope="direct">
+              <td>2023-11</td>
+              <td><span class="paper">Can You Translate for Me? Code-Switched MT with Large Language Models</span><span class="authors">Khatri, Srivastava &amp; Vig · IJCNLP-AACL 2023</span><a class="source-link" href="https://aclanthology.org/2023.ijcnlp-short.10/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-direct">直接</span></td>
+              <td>Code-switched MT 与受控混杂生成；覆盖常见印度语言混杂设置。</td>
+              <td>使用已有 code-switched MT 测试资源。</td>
+              <td>ChatGPT、BLOOMZ-7B、XGLM-7.5B、mT0-XXL 等 zero/few-shot 比较。</td>
+              <td>翻译质量、可控生成、常识、一致性与性别偏见分析。</td>
+              <td>ChatGPT 在所测 LLM 中更强并接近监督模型，但事实一致性、刻板印象和控制性问题不可忽略。</td>
+              <td>直接 CMT；同行评审。模型是当时快照，不代表当前版本。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval train direct" data-scope="direct">
+              <td>2023-12</td>
+              <td><span class="paper">Data Augmentation Techniques for MT of Code-Switched Texts: A Comparative Study</span><span class="authors">Hamed, Habash &amp; Vu · Findings EMNLP 2023</span><a class="source-link" href="https://aclanthology.org/2023.findings-emnlp.11/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
+              <td>Egyptian Arabic-English code-switched MT。</td>
+              <td>系统比较 lexical replacement、语言学理论约束、back-translation。</td>
+              <td>用不同合成数据训练 MT；区分需要 CS 平行数据与不需要 CS 平行数据的方法。</td>
+              <td>MT 效果 + 合成文本人工质量评价。</td>
+              <td>有 CS 平行数据时，BT 与可学习的预测式替换最好；没有时，语言学约束和随机替换仍是有竞争力的冷启动方案。</td>
+              <td>直接 CMT；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="eval llm adjacent" data-scope="adjacent">
+              <td>2023-12</td>
+              <td><span class="paper">Multilingual Large Language Models Are Not (Yet) Code-Switchers</span><span class="authors">Zhang et al. · EMNLP 2023</span><a class="source-link" href="https://aclanthology.org/2023.emnlp-main.774/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">含 MT</span></td>
+              <td>情感、MT、摘要、词级语言识别四任务。</td>
+              <td>整合多类 code-switched 数据作为统一 LLM 能力探针。</td>
+              <td>多种多语 LLM 的 zero/few-shot，与更小的专门微调模型比较。</td>
+              <td>按任务使用准确率、F1、生成指标；观察 prompting 收益。</td>
+              <td>“multilingual”不是“code-switch capable”的充分条件；小型专门模型在多项任务中仍更强。</td>
+              <td>含直接 MT 子任务，但不是纯翻译论文；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval llm adjacent" data-scope="adjacent">
+              <td>2023-12</td>
+              <td><span class="paper">Prompting Multilingual LLMs to Generate Code-Mixed Texts</span><span class="authors">Yong et al. · CALCS 2023</span><a class="source-link" href="https://aclanthology.org/2023.calcs-1.5/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>7 种东南亚语言/变体：Indonesian、Malay、Chinese、Tagalog、Vietnamese、Tamil、Singlish。</td>
+              <td>zero-shot 提示生成 code-mixed 文本。</td>
+              <td>ChatGPT、BLOOMZ、Flan-T5-XXL 等。</td>
+              <td>多提示模板、语言对比较与人工质检。</td>
+              <td>ChatGPT 能力高度依赖语言对和提示；公开指令模型常不能生成短语/从句级混杂，还可能引入未指定语言。合成数据必须人工抽检。</td>
+              <td>相邻生成研究；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="eval train direct" data-scope="direct">
+              <td>2023-12</td>
+              <td><span class="paper">Lost in Translation No More: Fine-tuned Models for CodeMix to English MT</span><span class="authors">Chatterjee et al. · ICON 2023</span><a class="source-link" href="https://aclanthology.org/2023.icon-1.25/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">Hinglish → English</span>。</td>
+              <td>构建/使用 PACMANtrans，并比较专门翻译数据设置。</td>
+              <td>T5、mT5、NLLB 等微调模型，与 GPT-4 等 LLM 比较。</td>
+              <td>以 BLEU 等自动指标为主。</td>
+              <td>GPT-4 在所测 LLM 中较强，但专门微调的翻译模型在该数据设置下仍可明显领先。</td>
+              <td>直接 CMT；同行评审。不同数据切分下不要横比绝对 BLEU。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="eval llm direct preprint" data-scope="direct">
+              <td>2023-12</td>
+              <td><span class="paper">Contextual Code Switching for Machine Translation using Language Models</span><span class="authors">Kaji &amp; Shah · arXiv 2312.13179</span><a class="source-link" href="https://arxiv.org/abs/2312.13179">arXiv</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-direct">直接</span><span class="tag tag-preprint">预印本</span></td>
+              <td>上下文 code-switching 的机器翻译模型比较。</td>
+              <td>针对性数据集上的比较实验。</td>
+              <td>多语 LLM 与复杂度较低、专门训练的模型。</td>
+              <td>按论文设置比较翻译性能。</td>
+              <td>较小但专门微调的模型可优于多语 LLM；作者将差距归因于训练数据与训练方式。</td>
+              <td>预印本；影响力和证据强度低于同年 EMNLP/LREC 系列工作。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="eval llm key direct" data-scope="direct">
+              <td>2024-05</td>
+              <td><span class="paper">Evaluating Code-Switching Translation with Large Language Models</span><span class="authors">Huzaifah et al. · LREC-COLING 2024</span><a class="source-link" href="https://aclanthology.org/2024.lrec-main.565/">ACL Anthology</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td>多语对 code-switching 输入 → 目标单语；覆盖不同混杂条件。</td>
+              <td>7 个数据集组成广覆盖测试套件。</td>
+              <td>6 个 LLM，与监督 NMT 和商业翻译系统比较；评估 ICL、pivot translation。</td>
+              <td>自动翻译指标 + 对混杂比例、位置、提示策略的鲁棒性分析。</td>
+              <td>GPT-4/3.5 在当时较强，GPT-4 对多种混杂条件更稳；few-shot 与 pivot 有帮助但并非普遍解决方案。</td>
+              <td>直接 CMT；同行评审。闭源模型结果是 2024 时点快照。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval train key direct" data-scope="direct">
+              <td>2024-05</td>
+              <td><span class="paper">Synthetic Data Generation and Joint Learning for Robust Code-Mixed Translation</span><span class="authors">Kartik et al. · LREC-COLING 2024</span><a class="source-link" href="https://aclanthology.org/2024.lrec-main.1345/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td>Hinglish→English；Bengalish→English 零样本迁移。</td>
+              <td>HINMIX：约 420 万条合成 Hinglish-English 平行句。</td>
+              <td>RCMT：基于扰动的联合训练，通过干净词/噪声词间参数共享学习真实社交文本噪声。</td>
+              <td>自动指标 + 定性/定量鲁棒性分析 + Bengalish zero-shot。</td>
+              <td>大规模合成能解决覆盖，但需显式建模拼写/噪声；否则规模并不等于真实域鲁棒性。</td>
+              <td>直接 CMT；同行评审。420 万为论文明确报告。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval direct" data-scope="direct">
+              <td>2024-08</td>
+              <td><span class="paper">CoVoSwitch: MT of Synthetic Code-Switched Text Based on Intonation Units</span><span class="authors">Kang · ACL SRW 2024</span><a class="source-link" href="https://aclanthology.org/2024.acl-srw.40/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-direct">直接</span></td>
+              <td>13 种语言；合成 code-switching → English / non-English。</td>
+              <td>基于 CoVoST 2，用 Whisper 微调的 PSST 划分 intonation units，再以语调单元而非随机词做替换。</td>
+              <td>评测 M2M-100 418M 与 NLLB-200 600M。</td>
+              <td>方向、资源量、off-target、复制、幻觉等分析。</td>
+              <td>翻到英语普遍优于翻到非英语；模型擅长复制英语词，却更难处理非英语片段，并出现 off-target 与幻觉。</td>
+              <td>直接 CMT；学生研究论文；数据为合成语音转文本派生。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval llm adjacent" data-scope="adjacent">
+              <td>2024-10</td>
+              <td><span class="paper">Linguistics Theory Meets LLM: Code-Switched Text Generation via Equivalence Constraints</span><span class="authors">Kuwanto et al. · arXiv 2024；CDL 2026 正式发表</span><a class="source-link" href="https://aclanthology.org/2026.cdl-1.1/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>5 个语言对的 code-switched 生成；Hindi/Tamil/Malayalam/Indonesian/Javanese 与高资源语言组合。</td>
+              <td>ECT 约束切换点；构造 CSPREF 人类偏好数据。</td>
+              <td>LLM 生成 + Equivalence Constraint Theory 显式约束。</td>
+              <td>母语者人评、自动指标与相关性分析；按源语言方向比较。</td>
+              <td>LLM 存在方向不对称；显式语言学约束主要帮助模型原本较弱的高资源源语言方向，不能假设约束对所有样本同样有效。</td>
+              <td>相邻生成研究；最初 2024 预印本，2026 CDL 同行评审。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval train direct" data-scope="direct">
+              <td>2024-11</td>
+              <td><span class="paper">On Creating an English-Thai Code-switched MT in Medical Domain</span><span class="authors">Pengpun et al. · Findings EMNLP 2024</span><a class="source-link" href="https://aclanthology.org/2024.findings-emnlp.351/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
+              <td><span class="direction">English → Thai 主体 + 关键 English 医疗术语</span>。</td>
+              <td>构造医疗域 code-switched 翻译数据与公开测试集。</td>
+              <td>专门 CS 翻译模型微调；与 Google NMT、GPT-3.5/4 比较。</td>
+              <td>自动指标 + 医疗专业人员偏好。</td>
+              <td>专家显著偏好保留关键英文术语的版本，即使流畅度略降。评测应把“错误残留”和“必要术语保留”分开。</td>
+              <td>直接生成方向；同行评审；领域结论不能直接外推到普通文本。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval llm direct preprint" data-scope="direct">
+              <td>2024-11</td>
+              <td><span class="paper">What talking you?: Translating Code-Mixed Messaging Texts to English</span><span class="authors">Ng &amp; Chan · arXiv 2411.05253</span><a class="source-link" href="https://arxiv.org/abs/2411.05253">arXiv</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-direct">直接</span><span class="tag tag-preprint">预印本</span></td>
+              <td><span class="direction">Singlish 短消息 → 正式英语</span>。</td>
+              <td>发布非正式消息数据，包含多种亚洲语言/方言成分。</td>
+              <td>5 个 LLM；先语言识别/解释、再翻译的多阶段 prompting。</td>
+              <td>错误分析聚焦语境、文化含义与隐含语义。</td>
+              <td>LLM 往往能生成语法正确的英文，却可能丢失对话语境与文化语义；“流畅”不等于“意思对”。</td>
+              <td>直接 CMT；预印本。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="eval train llm key direct preprint" data-scope="direct">
+              <td>2024-11<br><span class="note">2025-07 修订</span></td>
+              <td><span class="paper">CHAI for LLMs: Improving Code-Mixed Translation through RLAIF</span><span class="authors">Zhang, Majumdar &amp; Yadav · arXiv 2411.09073</span><a class="source-link" href="https://arxiv.org/abs/2411.09073">arXiv</a></td>
+              <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span><span class="tag tag-preprint">预印本</span></td>
+              <td><span class="direction">English → Hinglish</span>；不是 Hinglish→English。</td>
+              <td>MixMT + ALL-CS，共整理 15,190 条 SFT 平行实例；LLM 生成偏好标签。</td>
+              <td>Llama-3.1-8B-Instruct；SFT → AI 偏好标注/奖励模型 → RLAIF 对齐。</td>
+              <td>人工偏好相关性与人工胜率；还测 code-mixed 情感分析迁移。</td>
+              <td>LLM 偏好可近似人类偏好并用于规模化对齐；CHAI 相比强开源基线的人评胜率提升 25.66%。但结论不能直接当作“混杂输入→纯语输出”结果。</td>
+              <td>直接生成方向；预印本。15,190 与 25.66% 为修订稿报告。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval train llm adjacent preprint" data-scope="adjacent">
+              <td>2025-02</td>
+              <td><span class="paper">Conditioning LLMs to Generate Code-Switched Text: Grounded in Naturally Occurring Data</span><span class="authors">Heredia et al. · arXiv 2502.12924</span><a class="source-link" href="https://arxiv.org/abs/2502.12924">arXiv</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span><span class="tag tag-preprint">预印本</span></td>
+              <td><span class="direction">English → English-Spanish code-switched</span>。</td>
+              <td>从自然 CS 句出发回译成纯 English，得到平行语料；再微调单语→CS 生成器。</td>
+              <td>LLM fine-tuning，学习自然切换分布而非只学语法规则。</td>
+              <td>人类偏好、错误分析、传统自动指标与 LLM judge。</td>
+              <td>微调对稳定生成很关键；传统指标与人评相关性弱，LLM judge 更接近人偏好但仍需校准。</td>
+              <td>相邻生成研究；预印本。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval direct" data-scope="direct">
+              <td>2025-05</td>
+              <td><span class="paper">The Impact of Code-switched Synthetic Data Quality is Task Dependent</span><span class="authors">Hamed, Vu &amp; Habash · CALCS 2025</span><a class="source-link" href="https://aclanthology.org/2025.calcs-1.2/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-direct">含 MT</span></td>
+              <td>Egyptian Arabic-English；MT、ASR、级联 ST。</td>
+              <td>词替换、语言学理论、回译等多类合成策略。</td>
+              <td>不同下游任务分别训练/增强。</td>
+              <td>跨 MT、ASR、ST 比较合成质量与任务收益的关系。</td>
+              <td>“更自然的合成数据”是否转化为收益取决于任务；不能用单一人工自然度分数替代下游验证。</td>
+              <td>MT 为核心任务之一；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval train llm key direct" data-scope="direct">
+              <td>2025-07</td>
+              <td><span class="paper">AfroCS-xs: A Compact, High-Quality, Human-Validated Code-Switched Dataset</span><span class="authors">Olaleye et al. · ACL 2025</span><a class="source-link" href="https://aclanthology.org/2025.acl-long.1601/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td>Afrikaans、Sesotho、Yoruba、isiZulu 与 English；农业域，另测自然/OOD 金融。</td>
+              <td>LLM 合成混杂句和英语翻译，再由母语者严格校验与纠正。</td>
+              <td>微调多种 instruction-tuned LLM，并与 MT 模型比较。</td>
+              <td>自动翻译准确性 + 自然 code-switched 与跨域测试。</td>
+              <td>小规模但高质量的人校数据能持续改善低资源翻译，并外溢到自然数据和跨域测试；质量常比未校验规模更关键。</td>
+              <td>直接 CMT；同行评审。不要把“compact”误写成固定通用样本阈值。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data train llm adjacent" data-scope="adjacent">
+              <td>2025-07</td>
+              <td><span class="paper">Code-Switching Curriculum Learning for Multilingual Transfer in LLMs</span><span class="authors">Yoo et al. · Findings ACL 2025</span><a class="source-link" href="https://aclanthology.org/2025.findings-acl.407/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>LLM 跨语迁移到 Korean、Japanese、Indonesian；含 MT 评测。</td>
+              <td>三阶段数据：token-level CS → sentence-level CS → 纯目标语。</td>
+              <td>Qwen2 为主，扩展到 Gemma2、Phi-3.5 的 continual pre-training curriculum。</td>
+              <td>Multilingual MMLU、双向 MT、安全对齐与消融。</td>
+              <td>token 与句级混杂都提供桥梁，课程顺序放大迁移收益；适合作为“先桥接、再纯化”的 CPT 设计。</td>
+              <td>相邻预训练；不是专门 CMT 模型。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data train llm adjacent" data-scope="adjacent">
+              <td>2025-07</td>
+              <td><span class="paper">Investigating and Scaling up Code-Switching for Multilingual LM Pre-Training</span><span class="authors">Wang et al. · Findings ACL 2025</span><a class="source-link" href="https://aclanthology.org/2025.findings-acl.575/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>多语预训练与跨语表示对齐；含高/中/低资源语言。</td>
+              <td>分析预训练语料中的自然 code-switching，将其划为 2 象限 4 类型；再扩展 synthetic CS 数据规模。</td>
+              <td>继续预训练与表示空间对齐分析。</td>
+              <td>多语 benchmark、表示空间、不同资源量与数据质量。</td>
+              <td>自然 CS 是多语能力的重要桥梁；不同类型贡献不等，合成 CS 扩容可改善多资源层级的语言对齐。</td>
+              <td>相邻预训练；不能当作直接 CMT SOTA。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval llm key adjacent" data-scope="adjacent">
+              <td>2025-11</td>
+              <td><span class="paper">CodeMixBench: Evaluating Code-Mixing Capabilities of LLMs Across 18 Languages</span><span class="authors">Yang &amp; Chai · EMNLP 2025</span><a class="source-link" href="https://aclanthology.org/2025.emnlp-main.109/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-adjacent">含 MT</span></td>
+              <td>18 种语言、7 个语系、8 类任务（3 类 LLM 任务 + 5 类传统任务），其中含 MT。</td>
+              <td>整合公开资源，并用词替换 + GPT-4 prompting 合成大规模混杂文本。</td>
+              <td>多种 LLM 的 zero/few-shot 与规模比较。</td>
+              <td>跨任务、跨语系、训练数据量、模型规模、few-shot 分析。</td>
+              <td>跨语系混杂持续更难；增大训练数据/模型和 few-shot 有益，但没有消除结构性差距。</td>
+              <td>含 MT 的综合 benchmark；同行评审。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval train key direct" data-scope="direct">
+              <td>2026-03</td>
+              <td><span class="paper">VietMix: A Naturally-Occurring Parallel Corpus and Augmentation Framework</span><span class="authors">Tran et al. · EACL 2026</span><a class="source-link" href="https://aclanthology.org/2026.eacl-long.342/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
+              <td>自然 Vietnamese-English code-mixed → English；处理变音符缺失与正字法歧义。</td>
+              <td>首个专家翻译的自然越英混杂平行语料；迭代生成、微调与 targeted filtering。</td>
+              <td>真实数据 + 迭代增强，和强 back-translation、zero-shot 模型比较。</td>
+              <td>xCOMET 等现代指标；比较增强模型、回译与零样本。</td>
+              <td>相对强回译最高 +3.5 xCOMET；相对零样本最高 +11.9。自然种子、定向过滤和迭代闭环比一次性合成更可靠。</td>
+              <td>直接 CMT；同行评审。增益为论文各设置内最高值。</td>
+            </tr>
+
+            <tr class="paper-row" data-tags="data eval train llm adjacent" data-scope="adjacent">
+              <td>2026-07</td>
+              <td><span class="paper">Lost in the Mix: Evaluating LLM Understanding of Code-Switched Text</span><span class="authors">Mohamed et al. · ACL 2026</span><a class="source-link" href="https://aclanthology.org/2026.acl-long.2080/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>Belebele、MMLU、XNLI 的 5 种语言 code-switched 变体；理解与推理。</td>
+              <td>按语言学约束生成可控 CSW 测试集。</td>
+              <td>多模型比较 ICL 与 CSW fine-tuning。</td>
+              <td>准确率下降、切换方向不对称与缓解实验。</td>
+              <td>非英语 token 插入英语上下文通常降分，而英语插入非英语上下文常改善；ICL 不稳定，微调收益较小但可靠。</td>
+              <td>相邻理解 benchmark；不是 MT，但方向不对称对翻译测试设计重要。</td>
+            </tr>
+
+            <tr class="paper-row key-row" data-tags="data eval train llm key adjacent" data-scope="adjacent">
+              <td>2026-07</td>
+              <td><span class="paper">OLA: Output Language Alignment in Code-Switched LLM Interactions</span><span class="authors">Oh et al. · ACL 2026</span><a class="source-link" href="https://aclanthology.org/2026.acl-long.2162/">ACL Anthology</a></td>
+              <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-adjacent">相邻</span></td>
+              <td>Korean-English 为主，扩展到 Chinese / Indonesian；评测隐式输出语言期望。</td>
+              <td>OLA 覆盖句内混杂到 instruction-content mismatch。</td>
+              <td>frontier LLM 评测；Code-Switching Aware DPO，约 1K 条样本。</td>
+              <td>输出语言选错、中途切换、语言侵入；CoT 与 DPO 对比。</td>
+              <td>CoT 不能稳定解决语言选择；少量对齐数据的 DPO 显著减少错语和串语，说明问题更多来自 alignment 缺口。</td>
+              <td>相邻交互 benchmark；与“混杂→纯中文”的输出语言控制高度相关。</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="caveat"><strong>为什么有些熟悉的 benchmark 标成“相邻”？</strong> LinCE 2020 原始版是 LID/NER/POS/情感，GLUECoS 是六类理解任务；它们奠定了混杂数据的标准化评测，但不能被直接写成机器翻译结果。相反，MixMT、B2BT、LREC-COLING 2024、VietMix 等是直接翻译证据。</div>
+    </section>
+
+    <section id="trends" aria-labelledby="trends-title">
+      <h2 id="trends-title">三条主线怎么演化</h2>
+      <div class="trend-grid">
+        <article class="card">
+          <h3><span class="tag tag-data">数据</span> 从“找平行句”到“自然种子 + 迭代闭环”</h3>
+          <ul>
+            <li>2018：少量人工平行语料建立任务。</li>
+            <li>2021–2023：词替换、语言学约束、回译与课程学习成为主流。</li>
+            <li>2024：合成规模上到百万级，同时显式建模社交文本噪声。</li>
+            <li>2025–2026：LLM 合成必须配母语者校验、偏好数据或 targeted filtering；自然 seed 的价值重新上升。</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="tag tag-eval">评测</span> 从 BLEU 单点到分层、人评与失效模式</h3>
+          <ul>
+            <li>BLEU/chrF 仍适合基础可复现比较，但不能覆盖文化语义、术语保留与输出语言错位。</li>
+            <li>按混杂比例、切换位置、matrix language、语系距离和资源量分层，比只报平均分更有解释力。</li>
+            <li>COMET/xCOMET、LLM judge 与人评应互相校验；合成文本自然度不保证下游 MT 收益。</li>
+            <li>必须单报 off-target、hallucination、英文残留/必要术语、语境遗漏和中途串语。</li>
+          </ul>
+        </article>
+        <article class="card">
+          <h3><span class="tag tag-train">训练</span> 从预处理到 SFT、RLAIF/DPO 与 CPT</h3>
+          <ul>
+            <li>早期：language ID + transliteration/normalization + 现有 MT。</li>
+            <li>中期：mBART/mT5 多语预训练模型 + 合成数据/回译/领域课程。</li>
+            <li>LLM 时代：zero/few-shot 是评测基线，专门 SFT 仍经常胜出。</li>
+            <li>偏好优化用于混杂生成风格与输出语言对齐；Code-Switching CPT 则把混杂视为跨语表示桥梁。</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section aria-labelledby="metric-title">
+      <h2 id="metric-title">评测指标：分别回答什么问题</h2>
+      <div class="table-shell" style="max-height:none">
+        <table class="compact-table">
+          <thead><tr><th>层级</th><th>推荐指标 / 做法</th><th>它在问什么</th><th>主要盲点</th></tr></thead>
+          <tbody>
+            <tr><td>表面匹配</td><td>BLEU、chrF / chrF++</td><td>输出与参考译文在词片段或字符片段上有多像？</td><td>对可接受改写、多参考不足、文化语义和术语策略不敏感。</td></tr>
+            <tr><td>语义质量</td><td>COMET、xCOMET；必要时 QE 版本</td><td>源文—译文—参考之间的语义是否一致？哪里可能出错？</td><td>训练分布可能不含目标混杂类型；必须抽样人审。</td></tr>
+            <tr><td>混杂强度</td><td>CMI、M-index、I-index、switch-point 比例</td><td>输入/生成文本混了多少、在哪里切换、语言分布是否均衡？</td><td>它们描述“混杂结构”，不等于翻译正确性。</td></tr>
+            <tr><td>输出语言</td><td>目标语言 token 比例、off-target rate、中途 language intrusion</td><td>模型是否遵循“输出纯中文/纯英文”的隐式或显式约束？</td><td>专名、缩写、品牌和应保留术语必须进入白名单。</td></tr>
+            <tr><td>事实与覆盖</td><td>hallucination、omission、实体/数字/术语一致性</td><td>有没有无依据增添、漏译或关键实体被改写？</td><td>单个 aggregate score 会掩盖高风险样本。</td></tr>
+            <tr><td>人类可用性</td><td>adequacy、fluency、context/culture、preference win-rate</td><td>双语使用者是否认为意思对、自然、符合真实语境？</td><td>需要报告标注者背景、一致性与盲评协议。</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="protocol" aria-labelledby="protocol-title">
+      <h2 id="protocol-title">如果目标是“中英混杂 → 纯中文”，建议这样做实验</h2>
+      <div class="recommendation">
+        <ol>
+          <li><strong>固定 baseline 与预算：</strong>同一基础模型、相同训练 token/step、相同真实 seed 数据、相同测试集；一次只改变数据或对齐策略。</li>
+          <li><strong>数据轴：</strong>真实平行 only → 随机/词典替换 → 学习式切换点 → B2BT/迭代增强 → LLM 合成 + 人工/质量模型过滤。</li>
+          <li><strong>训练轴：</strong>prompt only → SFT → SFT + 偏好优化（DPO/RLAIF）→ code-switching CPT + SFT。CHAI 可借鉴偏好流程，但必须把方向改成混杂→纯中文重新验证。</li>
+          <li><strong>评测轴：</strong>BLEU/chrF + COMET/xCOMET + 人工 adequacy/fluency；单独报告英文残留、应保留术语、off-target、漏译、幻觉和语境错误。</li>
+          <li><strong>切片轴：</strong>低/中/高 CMI、句首/句中/术语位置、中文为 matrix language vs 英文为 matrix language、罗马化/缩写/错拼、领域内 vs 跨域。</li>
+          <li><strong>最终决策：</strong>不要只取平均自动分最高的模型；优先满足语义正确、目标语言稳定与关键术语策略，再看流畅度。</li>
+        </ol>
+      </div>
+    </section>
+
+    <footer>
+      资料来源以 ACL Anthology / arXiv 论文页为主。预印本已显式标记；闭源 LLM 结果反映论文评测时点，不代表当前产品版本。页面内容可通过上方论文标题后的链接逐条核验。
+    </footer>
+  </main>
+
+  <script>
+    (() => {
+      const rows = Array.from(document.querySelectorAll(".paper-row"));
+      const search = document.getElementById("paper-search");
+      const buttons = Array.from(document.querySelectorAll("button.filter"));
+      const count = document.getElementById("result-count");
+      let active = "all";
+
+      function applyFilters() {
+        const query = search.value.trim().toLowerCase();
+        let visible = 0;
+        rows.forEach((row) => {
+          const tags = row.dataset.tags.split(" ");
+          const categoryMatch = active === "all" || tags.includes(active);
+          const queryMatch = !query || row.textContent.toLowerCase().includes(query);
+          const show = categoryMatch && queryMatch;
+          row.classList.toggle("hidden", !show);
+          if (show) visible += 1;
+        });
+        count.textContent = `显示 ${visible} / ${rows.length}`;
+      }
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          active = button.dataset.filter;
+          buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+          applyFilters();
+        });
+      });
+
+      search.addEventListener("input", applyFilters);
+      applyFilters();
+    })();
+  </script>
+</body>
+</html>
