@@ -275,7 +275,7 @@
       font-size: 12.5px;
     }
 
-    .survey-table { min-width: 2500px; }
+    .survey-table { min-width: 2850px; }
     .compact-table { min-width: 1050px; }
 
     th,
@@ -499,6 +499,7 @@
           <colgroup>
             <col style="width:95px">
             <col style="width:310px">
+            <col style="width:340px">
             <col style="width:155px">
             <col style="width:280px">
             <col style="width:330px">
@@ -511,6 +512,7 @@
             <tr>
               <th>时间</th>
               <th>论文 / 发布状态</th>
+              <th>论文简介</th>
               <th>主轴与范围</th>
               <th>任务 / 语言</th>
               <th>数据与构造</th>
@@ -524,6 +526,7 @@
             <tr class="paper-row key-row" data-tags="data train key direct" data-scope="direct">
               <td>2018-08</td>
               <td><span class="paper">Enabling Code-Mixed Translation: Parallel Corpus Creation and MT Augmentation Approach</span><span class="authors">Dhar, Kumar &amp; Shrivastava · Workshop paper</span><a class="source-link" href="https://aclanthology.org/W18-3817/">ACL Anthology</a></td>
+              <td>较早正式定义 Code-Mixed 机器翻译任务的工作之一。论文创建人工 Hinglish→English 平行语料，并设计可插接现有翻译系统的语言识别与预处理增强管线。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">English-Hindi code-mixed → English</span>；社交媒体文本。</td>
               <td>从已有 Hinglish 数据出发，由 4 名双语译者翻译 6,088 句，形成早期人工平行语料。</td>
@@ -536,6 +539,7 @@
             <tr class="paper-row" data-tags="data train adjacent" data-scope="adjacent">
               <td>2019-06</td>
               <td><span class="paper">Code-Switching for Enhancing NMT with Pre-Specified Translation</span><span class="authors">Song et al. · NAACL 2019</span><a class="source-link" href="https://aclanthology.org/N19-1044/">ACL Anthology</a></td>
+              <td>研究怎样让 NMT 遵循用户给定的术语译法。作者把指定目标词提前替换进源句，构造受控 code-switched 训练数据，使模型通过复制学习术语约束。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-adjacent">相邻</span></td>
               <td>普通 NMT + 用户指定术语；源端被替换成目标语言短语，形成受控 code-switch。</td>
               <td>用目标译文替换源句中的指定短语，自动构造 code-switched 训练样本。</td>
@@ -548,6 +552,7 @@
             <tr class="paper-row" data-tags="data eval adjacent" data-scope="adjacent">
               <td>2020-05</td>
               <td><span class="paper">LinCE: A Centralized Benchmark for Linguistic Code-switching Evaluation</span><span class="authors">Aguilar, Kar &amp; Solorio · LREC 2020</span><a class="source-link" href="https://aclanthology.org/2020.lrec-1.223/">ACL Anthology</a></td>
+              <td>把分散的 code-switching 语料整理为统一 benchmark，覆盖四个语言对和四类序列理解任务，并提供标准切分、基线和在线评测平台。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-adjacent">相邻</span></td>
               <td>Spanish-English、Nepali-English、Hindi-English、MSA-Egyptian Arabic；4 个理解任务。</td>
               <td>集中 11 个语料库，统一切分与提交平台。</td>
@@ -560,6 +565,7 @@
             <tr class="paper-row" data-tags="data eval train adjacent" data-scope="adjacent">
               <td>2020-07</td>
               <td><span class="paper">GLUECoS: An Evaluation Benchmark for Code-Switched NLP</span><span class="authors">Khanuja et al. · ACL 2020</span><a class="source-link" href="https://aclanthology.org/2020.acl-main.329/">ACL Anthology</a></td>
+              <td>面向英印地语与英西语建立多任务 Code-Switched NLP benchmark，并系统检验多语模型是否还需要显式的混杂数据微调。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-adjacent">相邻</span></td>
               <td>English-Hindi 与 English-Spanish；LID、POS、NER、情感、QA、NLI。</td>
               <td>多任务统一 benchmark，并构造人工合成 code-switched 数据用于微调。</td>
@@ -572,6 +578,7 @@
             <tr class="paper-row key-row" data-tags="data train key direct" data-scope="direct">
               <td>2021-06</td>
               <td><span class="paper">Training Data Augmentation for Code-Mixed Translation</span><span class="authors">Gupta, Vavre &amp; Sarawagi · NAACL 2021</span><a class="source-link" href="https://aclanthology.org/2021.naacl-main.459/">ACL Anthology</a></td>
+              <td>针对混杂平行数据不足，使用 mBERT 序列标注器从少量真实语料学习切换决策，再把普通双语平行语料自动改造成 Hinglish→English 训练数据。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">Hindi-English code-mixed → English</span>。</td>
               <td>用少量真实混杂语料训练 mBERT 三分类序列标注器，再把普通非混杂平行语料转换为混杂源端；还扩展到回译。</td>
@@ -584,6 +591,7 @@
             <tr class="paper-row" data-tags="data train direct" data-scope="direct">
               <td>2021-06</td>
               <td><span class="paper">Exploring Text-to-Text Transformers for English to Hinglish MT with Synthetic Code-Mixing</span><span class="authors">Jawahar et al. · CALCS 2021</span><a class="source-link" href="https://aclanthology.org/2021.calcs-1.6/">ACL Anthology</a></td>
+              <td>探索 mT5、mBART 等文本到文本模型生成 Hinglish，并提出简单的无依存句法合成方法，通过“先合成、后真实”的课程微调缓解标注数据稀缺。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">English → Hinglish</span>。</td>
               <td>用双语分布表示生成无依存分析器的合成混杂数据。</td>
@@ -596,6 +604,7 @@
             <tr class="paper-row key-row" data-tags="data eval train key direct" data-scope="direct">
               <td>2021-08</td>
               <td><span class="paper">From Machine Translation to Code-Switching: Generating High-Quality Code-Switched Text</span><span class="authors">Tarunesh, Kumar &amp; Jyothi · ACL-IJCNLP 2021</span><a class="source-link" href="https://aclanthology.org/2021.acl-long.245/">ACL Anthology</a></td>
+              <td>把 Hindi→Hinglish 生成重新表述成机器翻译问题，提出 TCS 训练课程，同时发布带 Hindi 译文和人工核验变体的新语料，并从人评与下游任务验证生成质量。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">Hindi → Hindi-English code-switched</span>；matrix language 为 Hindi。</td>
               <td>新建含单语 Hindi 译文的真实混杂语料，并收集/人工核验 crowdsourced 变体；结合大量单语与平行语料。</td>
@@ -608,6 +617,7 @@
             <tr class="paper-row" data-tags="eval train direct" data-scope="direct">
               <td>2021-09</td>
               <td><span class="paper">Hinglish to English Machine Translation using Multilingual Transformers</span><span class="authors">Agarwal, Rao &amp; Jayagopi · RANLP SRW 2021</span><a class="source-link" href="https://aclanthology.org/2021.ranlp-srw.3/">ACL Anthology</a></td>
+              <td>在 PHINC 数据集上把 mBART、mT5 等多语预训练 seq2seq 模型用于 Hinglish→English，展示预训练模型相较早期专用基线的明显提升。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">Hinglish → English</span>；PHINC 数据集。</td>
               <td>使用现有 PHINC 平行语料。</td>
@@ -620,6 +630,7 @@
             <tr class="paper-row key-row" data-tags="data eval key direct" data-scope="direct">
               <td>2022-12</td>
               <td><span class="paper">Overview and Results of MixMT Shared-Task at WMT 2022</span><span class="authors">Srivastava &amp; Singh · WMT 2022</span><a class="source-link" href="https://aclanthology.org/2022.wmt-1.74/">ACL Anthology</a></td>
+              <td>WMT 2022 Code-Mixed MT 共享任务总览，首次在统一框架中设置“单语→混杂”和“混杂→单语”两个方向，并汇总参赛系统及人机评测结果。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td>Subtask 1：<span class="direction">monolingual → code-mixed</span>；Subtask 2：<span class="direction">code-mixed → monolingual</span>。</td>
               <td>提供共享训练/开发/测试数据与人评阶段；38 个团队注册，7 个团队完成活跃提交。</td>
@@ -632,6 +643,7 @@
             <tr class="paper-row key-row" data-tags="data train key direct" data-scope="direct">
               <td>2022-12</td>
               <td><span class="paper">Adapting Multilingual Models for Code-Mixed Translation</span><span class="authors">Vavre, Gupta &amp; Sarawagi · Findings EMNLP 2022</span><a class="source-link" href="https://aclanthology.org/2022.findings-emnlp.528/">ACL Anthology</a></td>
+              <td>提出 B2BT 两阶段回译框架：先让模型从真实混杂目标端学习混杂生成，再反向合成大规模混杂→英语平行数据，以低外部资源成本适配多种语言。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">Hi/Mr/Bn/Es mixed → English</span>。</td>
               <td>B2BT：真实混杂 C 先生成伪 English；训练 English→C 生成器；再把大量真实 English 转成合成 C，得到最终 C→English 平行数据。</td>
@@ -644,6 +656,7 @@
             <tr class="paper-row" data-tags="train direct" data-scope="direct">
               <td>2022-12</td>
               <td><span class="paper">Domain Curricula for Code-Switched MT at MixMT 2022</span><span class="authors">Downey et al. · WMT 2022 system paper</span><a class="source-link" href="https://aclanthology.org/2022.wmt-1.117/">ACL Anthology</a></td>
+              <td>研究 MixMT 中社交媒体域与外部语料的调度问题，通过领域课程、连续训练和句子对齐目标减轻顺序微调造成的领域遗忘。</td>
               <td><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
               <td>MixMT 双方向；社交媒体域与外域数据。</td>
               <td>组合多个领域与对齐数据。</td>
@@ -656,6 +669,7 @@
             <tr class="paper-row key-row" data-tags="eval key direct" data-scope="direct">
               <td>2023-07</td>
               <td><span class="paper">How effective is machine translation on low-resource code-switching?</span><span class="authors">Nguyen et al. · Findings ACL 2023</span><a class="source-link" href="https://aclanthology.org/2023.findings-acl.893/">ACL Anthology</a></td>
+              <td>以越南语—英语为案例，控制比较纯越南语与越英混杂输入在多个 MT 系统中的表现，并分析自动指标和人工语义评价为何可能给出不同判断。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td>Vietnamese 与 Vietnamese-English mixed 输入 → English。</td>
               <td>构造可对照的纯越南语与越英混杂输入。</td>
@@ -668,6 +682,7 @@
             <tr class="paper-row" data-tags="eval train adjacent" data-scope="adjacent">
               <td>2023-07</td>
               <td><span class="paper">CoMix: Guide Transformers to Code-Mix using POS Structure and Phonetics</span><span class="authors">Gautam et al. · Findings ACL 2023</span><a class="source-link" href="https://aclanthology.org/2023.findings-acl.506/">ACL Anthology</a></td>
+              <td>通过 POS 结构、音系特征和受约束弱监督生成提升 Transformer 的混杂表示，并提出更能容忍罗马化与拼写变体的 phonetic-aware 评测指标。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-adjacent">相邻</span></td>
               <td>Code-mixed 表示学习与生成；不是专门的 CMT 系统。</td>
               <td>POS 约束的弱监督生成与语音/音系信号。</td>
@@ -680,6 +695,7 @@
             <tr class="paper-row" data-tags="eval llm direct" data-scope="direct">
               <td>2023-11</td>
               <td><span class="paper">Can You Translate for Me? Code-Switched MT with Large Language Models</span><span class="authors">Khatri, Srivastava &amp; Vig · IJCNLP-AACL 2023</span><a class="source-link" href="https://aclanthology.org/2023.ijcnlp-short.10/">ACL Anthology</a></td>
+              <td>较早系统考察 ChatGPT、BLOOMZ、XGLM、mT0 等 LLM 处理 Code-Switched MT 的能力，同时分析受控生成、常识一致性与性别偏见。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-direct">直接</span></td>
               <td>Code-switched MT 与受控混杂生成；覆盖常见印度语言混杂设置。</td>
               <td>使用已有 code-switched MT 测试资源。</td>
@@ -692,6 +708,7 @@
             <tr class="paper-row" data-tags="data eval train direct" data-scope="direct">
               <td>2023-12</td>
               <td><span class="paper">Data Augmentation Techniques for MT of Code-Switched Texts: A Comparative Study</span><span class="authors">Hamed, Habash &amp; Vu · Findings EMNLP 2023</span><a class="source-link" href="https://aclanthology.org/2023.findings-emnlp.11/">ACL Anthology</a></td>
+              <td>在 Egyptian Arabic-English 场景中统一比较词汇替换、语言学约束与回译三类合成方案，既测 MT 下游收益，也由人工评价合成文本质量。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
               <td>Egyptian Arabic-English code-switched MT。</td>
               <td>系统比较 lexical replacement、语言学理论约束、back-translation。</td>
@@ -704,6 +721,7 @@
             <tr class="paper-row" data-tags="eval llm adjacent" data-scope="adjacent">
               <td>2023-12</td>
               <td><span class="paper">Multilingual Large Language Models Are Not (Yet) Code-Switchers</span><span class="authors">Zhang et al. · EMNLP 2023</span><a class="source-link" href="https://aclanthology.org/2023.emnlp-main.774/">ACL Anthology</a></td>
+              <td>用情感、翻译、摘要和词级语言识别四类任务系统检查多语 LLM 的 code-switching 能力，并与规模更小的专门微调模型对照。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">含 MT</span></td>
               <td>情感、MT、摘要、词级语言识别四任务。</td>
               <td>整合多类 code-switched 数据作为统一 LLM 能力探针。</td>
@@ -716,6 +734,7 @@
             <tr class="paper-row" data-tags="data eval llm adjacent" data-scope="adjacent">
               <td>2023-12</td>
               <td><span class="paper">Prompting Multilingual LLMs to Generate Code-Mixed Texts</span><span class="authors">Yong et al. · CALCS 2023</span><a class="source-link" href="https://aclanthology.org/2023.calcs-1.5/">ACL Anthology</a></td>
+              <td>在七种东南亚语言或语言变体上测试 zero-shot LLM 混杂文本生成，重点分析不同模型、语言对和提示模板的能力差异及生成风险。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
               <td>7 种东南亚语言/变体：Indonesian、Malay、Chinese、Tagalog、Vietnamese、Tamil、Singlish。</td>
               <td>zero-shot 提示生成 code-mixed 文本。</td>
@@ -728,6 +747,7 @@
             <tr class="paper-row" data-tags="eval train direct" data-scope="direct">
               <td>2023-12</td>
               <td><span class="paper">Lost in Translation No More: Fine-tuned Models for CodeMix to English MT</span><span class="authors">Chatterjee et al. · ICON 2023</span><a class="source-link" href="https://aclanthology.org/2023.icon-1.25/">ACL Anthology</a></td>
+              <td>围绕 Hinglish→English 构建专门翻译设置，微调 T5、mT5、NLLB 等 Transformer，并与 GPT-4 一类通用 LLM 进行对比。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">Hinglish → English</span>。</td>
               <td>构建/使用 PACMANtrans，并比较专门翻译数据设置。</td>
@@ -740,6 +760,7 @@
             <tr class="paper-row" data-tags="eval llm direct preprint" data-scope="direct">
               <td>2023-12</td>
               <td><span class="paper">Contextual Code Switching for Machine Translation using Language Models</span><span class="authors">Kaji &amp; Shah · arXiv 2312.13179</span><a class="source-link" href="https://arxiv.org/abs/2312.13179">arXiv</a></td>
+              <td>比较多语大模型和较小专用模型在上下文 code-switching 翻译中的表现，讨论预训练数据与训练方法如何限制通用 LLM 的混杂翻译能力。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-direct">直接</span><span class="tag tag-preprint">预印本</span></td>
               <td>上下文 code-switching 的机器翻译模型比较。</td>
               <td>针对性数据集上的比较实验。</td>
@@ -752,6 +773,7 @@
             <tr class="paper-row key-row" data-tags="eval llm key direct" data-scope="direct">
               <td>2024-05</td>
               <td><span class="paper">Evaluating Code-Switching Translation with Large Language Models</span><span class="authors">Huzaifah et al. · LREC-COLING 2024</span><a class="source-link" href="https://aclanthology.org/2024.lrec-main.565/">ACL Anthology</a></td>
+              <td>在七个数据集上系统评测六个 LLM，并与监督 NMT 和商业翻译系统比较，同时考察 few-shot、pivot 翻译与不同切换条件下的鲁棒性。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td>多语对 code-switching 输入 → 目标单语；覆盖不同混杂条件。</td>
               <td>7 个数据集组成广覆盖测试套件。</td>
@@ -764,6 +786,7 @@
             <tr class="paper-row key-row" data-tags="data eval train key direct" data-scope="direct">
               <td>2024-05</td>
               <td><span class="paper">Synthetic Data Generation and Joint Learning for Robust Code-Mixed Translation</span><span class="authors">Kartik et al. · LREC-COLING 2024</span><a class="source-link" href="https://aclanthology.org/2024.lrec-main.1345/">ACL Anthology</a></td>
+              <td>发布约 420 万句对的合成 HINMIX 语料，并提出 RCMT 扰动式联合训练，让模型同时利用大规模合成数据和真实社交文本中的噪声模式。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td>Hinglish→English；Bengalish→English 零样本迁移。</td>
               <td>HINMIX：约 420 万条合成 Hinglish-English 平行句。</td>
@@ -776,6 +799,7 @@
             <tr class="paper-row" data-tags="data eval direct" data-scope="direct">
               <td>2024-08</td>
               <td><span class="paper">CoVoSwitch: MT of Synthetic Code-Switched Text Based on Intonation Units</span><span class="authors">Kang · ACL SRW 2024</span><a class="source-link" href="https://aclanthology.org/2024.acl-srw.40/">ACL Anthology</a></td>
+              <td>从 CoVoST 2 语音翻译数据出发，以语调单元而非随机词为切换单位合成 13 语言混杂文本，并诊断多语 MT 的方向偏差、复制和幻觉问题。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-direct">直接</span></td>
               <td>13 种语言；合成 code-switching → English / non-English。</td>
               <td>基于 CoVoST 2，用 Whisper 微调的 PSST 划分 intonation units，再以语调单元而非随机词做替换。</td>
@@ -788,6 +812,7 @@
             <tr class="paper-row" data-tags="data eval llm adjacent" data-scope="adjacent">
               <td>2024-10</td>
               <td><span class="paper">Linguistics Theory Meets LLM: Code-Switched Text Generation via Equivalence Constraints</span><span class="authors">Kuwanto et al. · arXiv 2024；CDL 2026 正式发表</span><a class="source-link" href="https://aclanthology.org/2026.cdl-1.1/">ACL Anthology</a></td>
+              <td>把 Equivalence Constraint Theory 转化为 LLM 的显式切换点约束，在五个语言对上研究生成方向不对称，并发布基于母语者判断的 CSPREF 偏好数据。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
               <td>5 个语言对的 code-switched 生成；Hindi/Tamil/Malayalam/Indonesian/Javanese 与高资源语言组合。</td>
               <td>ECT 约束切换点；构造 CSPREF 人类偏好数据。</td>
@@ -800,6 +825,7 @@
             <tr class="paper-row" data-tags="data eval train direct" data-scope="direct">
               <td>2024-11</td>
               <td><span class="paper">On Creating an English-Thai Code-switched MT in Medical Domain</span><span class="authors">Pengpun et al. · Findings EMNLP 2024</span><a class="source-link" href="https://aclanthology.org/2024.findings-emnlp.351/">ACL Anthology</a></td>
+              <td>面向医疗场景构造 English→Thai 主体并保留关键英文术语的翻译数据，微调专用模型并邀请医疗专业人员评价术语准确性与可用性。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-direct">直接</span></td>
               <td><span class="direction">English → Thai 主体 + 关键 English 医疗术语</span>。</td>
               <td>构造医疗域 code-switched 翻译数据与公开测试集。</td>
@@ -812,6 +838,7 @@
             <tr class="paper-row" data-tags="data eval llm direct preprint" data-scope="direct">
               <td>2024-11</td>
               <td><span class="paper">What talking you?: Translating Code-Mixed Messaging Texts to English</span><span class="authors">Ng &amp; Chan · arXiv 2411.05253</span><a class="source-link" href="https://arxiv.org/abs/2411.05253">arXiv</a></td>
+              <td>研究 Singlish 即时消息到正式英语的翻译，使用多阶段提示让五个 LLM 先识别语言成分、再解释和翻译，并细查文化与对话语境错误。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-direct">直接</span><span class="tag tag-preprint">预印本</span></td>
               <td><span class="direction">Singlish 短消息 → 正式英语</span>。</td>
               <td>发布非正式消息数据，包含多种亚洲语言/方言成分。</td>
@@ -824,6 +851,7 @@
             <tr class="paper-row key-row" data-tags="eval train llm key direct preprint" data-scope="direct">
               <td>2024-11<br><span class="note">2025-07 修订</span></td>
               <td><span class="paper">CHAI for LLMs: Improving Code-Mixed Translation through RLAIF</span><span class="authors">Zhang, Majumdar &amp; Yadav · arXiv 2411.09073</span><a class="source-link" href="https://arxiv.org/abs/2411.09073">arXiv</a></td>
+              <td>提出面向 English→Hinglish 的 CHAI 对齐框架：先做 SFT，再用 LLM 标注候选翻译偏好并训练奖励模型，最后通过 RLAIF 改善混杂风格。</td>
               <td><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span><span class="tag tag-preprint">预印本</span></td>
               <td><span class="direction">English → Hinglish</span>；不是 Hinglish→English。</td>
               <td>MixMT + ALL-CS，共整理 15,190 条 SFT 平行实例；LLM 生成偏好标签。</td>
@@ -836,6 +864,7 @@
             <tr class="paper-row" data-tags="data eval train llm adjacent preprint" data-scope="adjacent">
               <td>2025-02</td>
               <td><span class="paper">Conditioning LLMs to Generate Code-Switched Text: Grounded in Naturally Occurring Data</span><span class="authors">Heredia et al. · arXiv 2502.12924</span><a class="source-link" href="https://arxiv.org/abs/2502.12924">arXiv</a></td>
+              <td>从自然英西混杂句反向构造纯英语—混杂平行数据，再微调 LLM 学习单语→混杂生成，并比较传统指标、LLM judge 与人类偏好。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span><span class="tag tag-preprint">预印本</span></td>
               <td><span class="direction">English → English-Spanish code-switched</span>。</td>
               <td>从自然 CS 句出发回译成纯 English，得到平行语料；再微调单语→CS 生成器。</td>
@@ -848,6 +877,7 @@
             <tr class="paper-row" data-tags="data eval direct" data-scope="direct">
               <td>2025-05</td>
               <td><span class="paper">The Impact of Code-switched Synthetic Data Quality is Task Dependent</span><span class="authors">Hamed, Vu &amp; Habash · CALCS 2025</span><a class="source-link" href="https://aclanthology.org/2025.calcs-1.2/">ACL Anthology</a></td>
+              <td>把词替换、语言学约束和回译等合成策略同时放到 MT、ASR、级联语音翻译中，检验合成文本质量与实际下游收益之间是否一致。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-direct">含 MT</span></td>
               <td>Egyptian Arabic-English；MT、ASR、级联 ST。</td>
               <td>词替换、语言学理论、回译等多类合成策略。</td>
@@ -860,6 +890,7 @@
             <tr class="paper-row key-row" data-tags="data eval train llm key direct" data-scope="direct">
               <td>2025-07</td>
               <td><span class="paper">AfroCS-xs: A Compact, High-Quality, Human-Validated Code-Switched Dataset</span><span class="authors">Olaleye et al. · ACL 2025</span><a class="source-link" href="https://aclanthology.org/2025.acl-long.1601/">ACL Anthology</a></td>
+              <td>使用 LLM 为四种非洲语言生成农业域混杂句及英语翻译，再由母语者逐条校正，用于研究少量高质量数据能否有效微调翻译 LLM。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td>Afrikaans、Sesotho、Yoruba、isiZulu 与 English；农业域，另测自然/OOD 金融。</td>
               <td>LLM 合成混杂句和英语翻译，再由母语者严格校验与纠正。</td>
@@ -872,6 +903,7 @@
             <tr class="paper-row" data-tags="data train llm adjacent" data-scope="adjacent">
               <td>2025-07</td>
               <td><span class="paper">Code-Switching Curriculum Learning for Multilingual Transfer in LLMs</span><span class="authors">Yoo et al. · Findings ACL 2025</span><a class="source-link" href="https://aclanthology.org/2025.findings-acl.407/">ACL Anthology</a></td>
+              <td>模拟二语习得过程，按 token 级混杂、句子级切换、纯目标语三个阶段继续预训练 LLM，以增强韩语、日语和印尼语的跨语迁移。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
               <td>LLM 跨语迁移到 Korean、Japanese、Indonesian；含 MT 评测。</td>
               <td>三阶段数据：token-level CS → sentence-level CS → 纯目标语。</td>
@@ -884,6 +916,7 @@
             <tr class="paper-row" data-tags="data train llm adjacent" data-scope="adjacent">
               <td>2025-07</td>
               <td><span class="paper">Investigating and Scaling up Code-Switching for Multilingual LM Pre-Training</span><span class="authors">Wang et al. · Findings ACL 2025</span><a class="source-link" href="https://aclanthology.org/2025.findings-acl.575/">ACL Anthology</a></td>
+              <td>分析预训练语料中自然 code-switching 的类型与作用，再逐步扩大合成混杂数据规模，研究其对跨语表示对齐及不同资源语言能力的影响。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
               <td>多语预训练与跨语表示对齐；含高/中/低资源语言。</td>
               <td>分析预训练语料中的自然 code-switching，将其划为 2 象限 4 类型；再扩展 synthetic CS 数据规模。</td>
@@ -896,6 +929,7 @@
             <tr class="paper-row key-row" data-tags="data eval llm key adjacent" data-scope="adjacent">
               <td>2025-11</td>
               <td><span class="paper">CodeMixBench: Evaluating Code-Mixing Capabilities of LLMs Across 18 Languages</span><span class="authors">Yang &amp; Chai · EMNLP 2025</span><a class="source-link" href="https://aclanthology.org/2025.emnlp-main.109/">ACL Anthology</a></td>
+              <td>建立覆盖 18 种语言、7 个语系和 8 类任务的综合 LLM benchmark，并结合词替换与 GPT-4 提示扩展大规模合成混杂测试数据。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-adjacent">含 MT</span></td>
               <td>18 种语言、7 个语系、8 类任务（3 类 LLM 任务 + 5 类传统任务），其中含 MT。</td>
               <td>整合公开资源，并用词替换 + GPT-4 prompting 合成大规模混杂文本。</td>
@@ -908,6 +942,7 @@
             <tr class="paper-row key-row" data-tags="data eval train key direct" data-scope="direct">
               <td>2026-03</td>
               <td><span class="paper">VietMix: A Naturally-Occurring Parallel Corpus and Augmentation Framework</span><span class="authors">Tran et al. · EACL 2026</span><a class="source-link" href="https://aclanthology.org/2026.eacl-long.342/">ACL Anthology</a></td>
+              <td>发布首个专家翻译的自然越英混杂平行语料，并提出“真实种子—迭代微调—定向过滤”的增强闭环，处理变音符缺失和正字法歧义。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-key">★ 重点</span><span class="tag tag-direct">直接</span></td>
               <td>自然 Vietnamese-English code-mixed → English；处理变音符缺失与正字法歧义。</td>
               <td>首个专家翻译的自然越英混杂平行语料；迭代生成、微调与 targeted filtering。</td>
@@ -920,6 +955,7 @@
             <tr class="paper-row" data-tags="data eval train llm adjacent" data-scope="adjacent">
               <td>2026-07</td>
               <td><span class="paper">Lost in the Mix: Evaluating LLM Understanding of Code-Switched Text</span><span class="authors">Mohamed et al. · ACL 2026</span><a class="source-link" href="https://aclanthology.org/2026.acl-long.2080/">ACL Anthology</a></td>
+              <td>按语言学约束为 Belebele、MMLU、XNLI 构造五种语言的可控混杂版本，分析切换方向对理解和推理的影响，并比较 ICL 与微调的缓解能力。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-adjacent">相邻</span></td>
               <td>Belebele、MMLU、XNLI 的 5 种语言 code-switched 变体；理解与推理。</td>
               <td>按语言学约束生成可控 CSW 测试集。</td>
@@ -932,6 +968,7 @@
             <tr class="paper-row key-row" data-tags="data eval train llm key adjacent" data-scope="adjacent">
               <td>2026-07</td>
               <td><span class="paper">OLA: Output Language Alignment in Code-Switched LLM Interactions</span><span class="authors">Oh et al. · ACL 2026</span><a class="source-link" href="https://aclanthology.org/2026.acl-long.2162/">ACL Anthology</a></td>
+              <td>提出 OLA benchmark，评测 LLM 能否从混杂提示中推断用户期望的输出语言，并用约 1K 条 Code-Switching Aware DPO 数据缓解错语与中途串语。</td>
               <td><span class="tag tag-data">数据</span><span class="tag tag-eval">评测</span><span class="tag tag-train">训练</span><span class="tag tag-llm">LLM</span><span class="tag tag-key">★ 重点</span><span class="tag tag-adjacent">相邻</span></td>
               <td>Korean-English 为主，扩展到 Chinese / Indonesian；评测隐式输出语言期望。</td>
               <td>OLA 覆盖句内混杂到 instruction-content mismatch。</td>
